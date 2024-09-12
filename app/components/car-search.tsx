@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Image from "next/image";
+import ElementTile from "./ElementTitle";
 
 interface CarSearchProps {
   isAdmin: boolean;
@@ -27,6 +28,9 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
 
   // State for filtered data
   const [filteredCars, setFilteredCars] = useState(cars);
+
+  const [isFormVisible, setIsFormVisible] = useState(true); // Form visibility state
+  const [isScrolled, setIsScrolled] = useState(false); // Scroll state
 
   // Check if the data is loading
   const isLoading = cars.length === 0;
@@ -53,6 +57,36 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
 
     setFilteredCars(filtered);
   }, [selectedBrand, selectedModel, selectedYear, selectedLocation, cars]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 100); // Mark as scrolled if more than 100px from top
+
+      // Automatically show form when close to the top
+      if (scrollPosition <= 100) {
+        setIsFormVisible(true);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
+  const toggleFormVisibility = () => {
+    setIsFormVisible(!isFormVisible);
+  };
+
+  // Function to clear all dropdown selections
+  const clearAllSelections = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    setSelectedBrand("");
+    setSelectedModel("");
+    setSelectedYear("");
+    setSelectedLocation("");
+    setCurrentPage(1); // Reset pagination
+  };
 
   // Pagination Logic
   const indexOfLastCar = currentPage * carsPerPage;
@@ -108,94 +142,151 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
 
   return (
     <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6 text-center">Search Car</h1>
-
-      <form className="flex flex-wrap gap-4 mb-8 justify-center">
-        {/* Brand selection */}
-        <select
-          name="brand"
-          aria-label="brand"
-          value={selectedBrand}
-          onChange={(e) => {
-            setSelectedBrand(e.target.value);
-            setSelectedModel(""); // Reset model when brand changes
-            setSelectedYear(""); // Reset year when brand changes
-            setSelectedLocation(""); // Reset location when brand changes
-            setCurrentPage(1); // Reset pagination on filter change
-          }}
-          className="p-2 border rounded-md"
+      <div className="sticky top-2 mb-6 z-[9999] bg-[#cccccc] w-fit m-auto px-4 py-4 rounded-lg">
+        <div className="flex justify-center">
+          <h1 className="text-3xl font-bold mb-6 text-center">Search car</h1>
+          {/* Button to show options when the form is hidden */}
+          {isScrolled && !isFormVisible && (
+            <button
+              onClick={toggleFormVisibility}
+              className="block mx-auto mb-4 p-2 bg-blue-500 text-white rounded-lg transition-all"
+            >
+              Show Options
+            </button>
+          )}
+          {/* Button to hide form */}
+          {isFormVisible && isScrolled && (
+            <button
+              onClick={toggleFormVisibility}
+              className="block mx-auto mt-4 p-2 bg-red-500 text-white rounded-lg transition-all"
+            >
+              Hide Options
+            </button>
+          )}
+        </div>
+        <form
+          className={`flex flex-wrap gap-4 justify-center transition-opacity duration-500 ${
+            isFormVisible
+              ? "opacity-100 h-auto"
+              : "opacity-0 h-0 overflow-hidden"
+          }`}
         >
-          <option value="">Select Brand</option>
-          {brands.map((brand, index) => (
-            <option key={index} value={brand}>
-              {brand}
-            </option>
-          ))}
-        </select>
+          <select
+            name="brand"
+            aria-label="brand"
+            value={selectedBrand}
+            onChange={(e) => {
+              setSelectedBrand(e.target.value);
+              setSelectedModel("");
+              setSelectedYear("");
+              setSelectedLocation("");
+              setCurrentPage(1);
+            }}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Select Brand</option>
+            {[...new Set(cars.map((car) => car.brand))].map((brand, index) => (
+              <option key={index} value={brand}>
+                {brand}
+              </option>
+            ))}
+          </select>
 
-        {/* Model selection */}
-        <select
-          name="model"
-          aria-label="model"
-          value={selectedModel}
-          onChange={(e) => {
-            setSelectedModel(e.target.value);
-            setSelectedYear(""); // Reset year when model changes
-            setSelectedLocation(""); // Reset location when model changes
-            setCurrentPage(1); // Reset pagination on filter change
-          }}
-          disabled={!selectedBrand}
-          className="p-2 border rounded-md"
-        >
-          <option value="">Select Model</option>
-          {models.map((model, index) => (
-            <option key={index} value={model}>
-              {model}
-            </option>
-          ))}
-        </select>
+          <select
+            name="model"
+            aria-label="model"
+            value={selectedModel}
+            onChange={(e) => {
+              setSelectedModel(e.target.value);
+              setSelectedYear("");
+              setSelectedLocation("");
+              setCurrentPage(1);
+            }}
+            disabled={!selectedBrand}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Select Model</option>
+            {[
+              ...new Set(
+                cars
+                  .filter((car) => car.brand === selectedBrand)
+                  .map((car) => car.model)
+              ),
+            ].map((model, index) => (
+              <option key={index} value={model}>
+                {model}
+              </option>
+            ))}
+          </select>
 
-        {/* Year selection */}
-        <select
-          name="year"
-          aria-label="year"
-          value={selectedYear}
-          onChange={(e) => {
-            setSelectedYear(e.target.value);
-            setSelectedLocation(""); // Reset location when year changes
-            setCurrentPage(1); // Reset pagination on filter change
-          }}
-          disabled={!selectedModel}
-          className="p-2 border rounded-md"
-        >
-          <option value="">Select Year</option>
-          {years.map((year, index) => (
-            <option key={index} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+          <select
+            name="year"
+            aria-label="year"
+            value={selectedYear}
+            onChange={(e) => {
+              setSelectedYear(e.target.value);
+              setSelectedLocation("");
+              setCurrentPage(1);
+            }}
+            disabled={!selectedModel}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Select Year</option>
+            {[
+              ...new Set(
+                cars
+                  .filter(
+                    (car) =>
+                      car.brand === selectedBrand &&
+                      (!selectedModel || car.model === selectedModel)
+                  )
+                  .map((car) => car.year)
+              ),
+            ].map((year, index) => (
+              <option key={index} value={year}>
+                {year}
+              </option>
+            ))}
+          </select>
 
-        {/* Location selection */}
-        <select
-          name="location"
-          aria-label="location"
-          value={selectedLocation}
-          onChange={(e) => {
-            setSelectedLocation(e.target.value);
-            setCurrentPage(1); // Reset pagination on filter change
-          }}
-          disabled={!selectedYear}
-          className="p-2 border rounded-md"
-        >
-          <option value="">Select Location</option>
-          {locations.map((location, index) => (
-            <option key={index} value={location}>
-              {location}
-            </option>
-          ))}
-        </select>
-      </form>
+          <select
+            name="location"
+            aria-label="location"
+            value={selectedLocation}
+            onChange={(e) => {
+              setSelectedLocation(e.target.value);
+              setCurrentPage(1);
+            }}
+            disabled={!selectedYear}
+            className="p-2 border rounded-md"
+          >
+            <option value="">Select Location</option>
+            {[
+              ...new Set(
+                cars
+                  .filter(
+                    (car) =>
+                      car.brand === selectedBrand &&
+                      (!selectedModel || car.model === selectedModel) &&
+                      (!selectedYear || car.year === selectedYear)
+                  )
+                  .map((car) => car.location)
+              ),
+            ].map((location, index) => (
+              <option key={index} value={location}>
+                {location}
+              </option>
+            ))}
+          </select>
+          {/* Clear all button */}
+          <button
+            onClick={(e) => clearAllSelections(e)}
+            className="block mx-auto mt-4 p-2 bg-yellow-500 text-black rounded-lg transition-all"
+          >
+            Clear All
+          </button>
+        </form>
+      </div>
 
       {/* Show filtered car list */}
       {isLoading ? (
@@ -215,7 +306,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {currentCars.map((car, index) => (
                   <div
-                    className="bg-[#212121] rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                    className="h-fit bg-[#212121] shadow-lg rounded-lg hover:shadow-lg transition-shadow"
                     key={index}
                   >
                     <div className="relative">
@@ -226,14 +317,11 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
                         height={200}
                         className="w-full h-auto rounded-lg"
                       />
-                      <div className="bg-[#D9D9D9] w-fit rounded-lg outline outline-2 absolute top-4 right-4">
-                        <div className="flex justify-center gap-2 p-1">
-                          <span className="material-symbols-outlined">
-                            imagesmode
-                          </span>
-                          <span className="text-base">7</span>
-                        </div>
-                      </div>
+                      <ElementTile
+                        icon="imagesmode"
+                        content={String(Math.floor(Math.random() * 10))}
+                        tooltip="Number of images"
+                      />
                     </div>
                     <div className="p-4">
                       <h2 className="text-2xl text-white font-bold">
@@ -290,11 +378,11 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
 
               {/* Pagination controls */}
               {filteredCars.length > carsPerPage && (
-                <div className="flex justify-center mt-8">
+                <div className="md:grid md:grid-cols-3 flex justify-center mt-8 bg-[#212121] w-fit m-auto rounded-lg p-2">
                   <button
                     onClick={handlePrevPage}
                     disabled={currentPage === 1}
-                    className={`px-4 py-2 mx-2 bg-gray-200 rounded-md ${
+                    className={`px-3 py-2 mx-2 bg-gray-200 rounded-md ${
                       currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
                     }`}
                   >
@@ -302,21 +390,21 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
                       <span className="material-symbols-outlined">
                         chevron_left
                       </span>
-                      Previous
+                      <span className="md:block hidden">Previous</span>
                     </div>
                   </button>
-                  <span className="px-4 py-2 mx-2">{`Page ${currentPage} of ${totalPages}`}</span>
+                  <span className="px-3 py-2 mx-2 text-[#D9D9D9]">{`Page ${currentPage} of ${totalPages}`}</span>
                   <button
                     onClick={handleNextPage}
                     disabled={currentPage === totalPages}
-                    className={`px-4 py-2 mx-2 bg-gray-200 rounded-md ${
+                    className={`px-3 py-2 mx-2 bg-gray-200 rounded-md ${
                       currentPage === totalPages
                         ? "cursor-not-allowed opacity-50"
                         : ""
                     }`}
                   >
                     <div className="flex justify-center">
-                      Next
+                      <span className="md:block hidden">Next</span>
                       <span className="material-symbols-outlined">
                         chevron_right
                       </span>

@@ -5,3 +5,22 @@
 body {
     background-color: #525252;
 }
+
+.hover-label::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    top: 2.2rem;
+    right: 0;
+    background-color: #212121;
+    color: #D9D9D9;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 12px;
+    opacity: 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.hover-label:hover::after {
+    opacity: 1;
+}

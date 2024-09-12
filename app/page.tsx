@@ -1,14 +1,8 @@
 import CarSearch from "./components/car-search";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import {
-  RegisterLink,
-  LoginLink,
-  LogoutLink,
-} from "@kinde-oss/kinde-auth-nextjs/components";
 
-import Image from "next/image";
 import "./globals.css";
-import Link from "next/link";
+import Header from "./components/header";
 
 export default async function Home() {
   const { getUser } = getKindeServerSession();
@@ -17,32 +11,9 @@ export default async function Home() {
   const isAdmin = user?.id === process.env.ADMIN_ID;
 
   return (
-    <div>
-      <div className="header">
-        {user ? (
-          <div className="user-profile-container">
-            <div className="profile-icon-container">
-              <Image
-                src={user?.picture || "no profile picture"}
-                width={40}
-                height={40}
-                alt="profile picture"
-                className="profile-image"
-              />
-            </div>
-            <div className="dropdown-menu">
-              <p>Welcome {user.given_name}</p>
-              <LogoutLink>Log out</LogoutLink>
-            </div>
-          </div>
-        ) : (
-          <LoginLink>Login</LoginLink>
-        )}
-
-        <RegisterLink>Sign up</RegisterLink>
-      </div>
-      <Link href="/upload">Upload</Link>
+    <main>
+      <Header user={user} isAdmin={isAdmin} />
       <CarSearch isAdmin={isAdmin} userId={user?.id} />
-    </div>
+    </main>
   );
 }
