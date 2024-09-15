@@ -1,4 +1,4 @@
-import CarSearch from "./components/car-search";
+import CarSearch from "./components/CarSearch";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
 import "./globals.css";

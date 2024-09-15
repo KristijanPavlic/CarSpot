@@ -13,16 +13,24 @@ export const createCar = mutation({
     brand: v.string(),
     model: v.string(),
     year: v.string(),
-    location: v.string(),
+    city: v.string(),
+    country: v.string(),
     userId: v.string(),
+    username: v.string(),
+    imagePublicIds: v.array(v.string()),
+    postId: v.string(),
   },
   handler: async (ctx, args) => {
     const carId = await ctx.db.insert("cars", {
       brand: args.brand,
       model: args.model,
       year: args.year,
-      location: args.location,
+      city: args.city,
+      country: args.country,
       userId: args.userId,
+      username: args.username,
+      imagePublicIds: args.imagePublicIds,
+      postId: args.postId,
     });
   },
 });

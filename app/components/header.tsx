@@ -25,7 +25,7 @@ const Header = ({ user, isAdmin }: HeaderProps) => {
           </Link>
         )}
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 z-[2]">
         {user ? (
           <div className="relative group">
             <div className="flex items-center gap-2 cursor-pointer">
@@ -38,13 +38,12 @@ const Header = ({ user, isAdmin }: HeaderProps) => {
                   className="rounded-full"
                 />
               </div>
-              {/* <p className="text-sm">Welcome, {user.given_name}</p> */}
             </div>
 
             <div className="dropdown-menu w-max px-4 py-2 absolute right-0 mt-2 bg-[#D9D9D9] text-black p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <p className="text-sm mb-2">Welcome {user.given_name}</p>
+              <p className="text-sm mb-2 p-2">Welcome {user.given_name}</p>
               <LogoutLink className="text-base font-medium mt-4">
-                <div className="flex gap-2 p-2 rounded-lg hover:bg-[#acacac] transition duration-300 ease-in-out">
+                <div className="flex gap-3 p-2 rounded-lg hover:bg-[#acacac] transition duration-300 ease-in-out">
                   Log out
                   <span className="material-symbols-outlined">logout</span>
                 </div>

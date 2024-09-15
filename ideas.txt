@@ -1,0 +1,14 @@
+-dodati hero section
+-preraditi nav menu
+-dodati "Post a spot" sticky gumb
+-doraditi serach
+-dodati "Favourites" funkcionalnost sa zvjedicom na post-u
+-dodati creatora post-a
+-napraviti db za slike i povezati ju sa stranicom
+-dodati edit funkcionalnost na post
+-user profile "My posts" funkcionalnost
+-validacija objave
+-logo uz brand
+-logo za električne i benzince
+-napraviti dynmaic route za post-ove
+-karta post-ova

@@ -1,5 +1,8 @@
 {
-  "name": "test-app",
+  "name": "car-spot",
+  "author": {
+    "name": "KriPa Web"
+  },
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -11,20 +14,27 @@
   "dependencies": {
     "@kinde-oss/kinde-auth-nextjs": "^2.3.8",
     "@kinde-oss/kinde-auth-react": "^4.0.2",
+    "axios": "^1.7.7",
     "class-variance-authority": "^0.7.0",
+    "cloudinary": "^2.4.0",
     "clsx": "^2.1.1",
     "convex": "^1.15.0",
     "next": "14.2.7",
+    "pica": "^9.0.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@types/next": "^9.0.0",
     "@types/node": "^20",
+    "@types/pica": "^9.0.4",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/react-slick": "^0.23.13",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
     "postcss": "^8",

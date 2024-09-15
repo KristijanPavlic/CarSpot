@@ -6,7 +6,11 @@ export default defineSchema({
     brand: v.string(),
     model: v.string(),
     year: v.string(),
-    location: v.string(),
+    city: v.string(),
+    country: v.string(),
     userId: v.string(),
+    username: v.string(),
+    imagePublicIds: v.array(v.string()),
+    postId: v.string(),
   }),
 });
