@@ -40,5 +40,6 @@ export const deleteCar = mutation({
   args: { id: v.id("cars") },
   handler: async (ctx, args) => {
     await ctx.db.delete(args.id);
+    return "Car deleted successfully";
   },
 });
