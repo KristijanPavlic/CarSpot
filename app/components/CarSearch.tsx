@@ -1,7 +1,7 @@
 // CarSearch.tsx
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import CarCard from "./CarCard";
@@ -12,10 +12,12 @@ import { Car } from "../types/types";
 interface CarSearchProps {
   isAdmin: boolean;
   userId: string;
+  username: string;
 }
 
-const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
-  const cars = useQuery(api.cars.get) ?? [];
+const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
+  const queryResult = useQuery(api.cars.get);
+  const cars = useMemo(() => queryResult ?? [], [queryResult]);
   const deleteCar = useMutation(api.cars.deleteCar);
 
   // State for each filter
@@ -224,6 +226,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
                     car={car}
                     isAdmin={isAdmin}
                     userId={userId}
+                    username={username}
                     deleteCar={deleteCar}
                   />
                 ))}

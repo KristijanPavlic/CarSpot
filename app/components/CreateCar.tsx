@@ -25,10 +25,6 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
 
   const [postId] = useState(`${userId}-${Date.now()}`);
 
-  const sanitizeFileName = (name: string) => {
-    return name.replace(/\s+/g, "_").replace(/[^\w.-]/g, "");
-  };
-
   // In your image upload function
   const handleImageUpload = async (file: File) => {
     // Sanitize file name to avoid spaces or special characters
@@ -50,7 +46,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
       `https://api.cloudinary.com/v1_1/dn0ngtrru/image/upload`,
       formData
     );
-
+    
     return sanitizedFileName; // Return the sanitized image name
   };
 
@@ -84,14 +80,6 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
     setCity("");
     setCountry("");
     setImages(null);
-  };
-
-  const deleteImagesFromCloudinary = async (publicIds: string[]) => {
-    try {
-      await axios.post("/api/delete-images", { publicIds });
-    } catch (error) {
-      console.error("Error deleting images:", error);
-    }
   };
 
   return (

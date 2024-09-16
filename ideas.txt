@@ -1,3 +1,4 @@
+-popraviti postId imageName i kako se zove folder i slike u Cloudinary i kako se dodjeljuje
 -dodati hero section
 -preraditi nav menu
 -dodati "Post a spot" sticky gumb

@@ -9,5 +9,6 @@ export interface Car {
   country: string;
   imagePublicIds?: string[];
   userId: string;
+  username: string;
   postId: string;
 }

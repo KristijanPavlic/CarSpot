@@ -4,8 +4,10 @@ import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 const UploadPost = async () => {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log(user?.given_name);
+  
 
-  return <CreateCar userId={user?.id ?? ""} username={user?.username ?? ""} />;
+  return <CreateCar userId={user?.id ?? ""} username={user?.given_name ?? ""} />;
 };
 
 export default UploadPost;
