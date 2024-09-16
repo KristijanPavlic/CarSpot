@@ -22,8 +22,6 @@ interface CarCardProps {
       "public",
       {
         id: Id<"cars">;
-        imagePublicIds?: string[];
-        folder?: string;
       },
       string
     >
