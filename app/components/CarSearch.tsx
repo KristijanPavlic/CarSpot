@@ -12,7 +12,7 @@ import { Car } from "../types/types";
 interface CarSearchProps {
   isAdmin: boolean;
   userId: string;
-  username: string;
+  username?: string;
 }
 
 const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
@@ -226,7 +226,7 @@ const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
                     car={car}
                     isAdmin={isAdmin}
                     userId={userId}
-                    username={username}
+                    username={username || ""}
                     deleteCar={deleteCar}
                   />
                 ))}
