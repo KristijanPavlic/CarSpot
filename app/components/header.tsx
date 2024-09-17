@@ -25,7 +25,7 @@ const Header = ({ user, isAdmin }: HeaderProps) => {
           </Link>
         )}
       </div>
-      <div className="flex items-center gap-4 z-[2]">
+      <div className="flex items-center gap-4 z-[999]">
         {user ? (
           <div className="relative group">
             <div className="flex items-center gap-2 cursor-pointer">

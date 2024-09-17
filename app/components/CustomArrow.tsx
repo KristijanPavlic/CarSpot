@@ -8,7 +8,7 @@ interface ArrowProps {
 export const NextArrow = ({ onClick }: ArrowProps) => {
   return (
     <div
-      className="absolute right-3 top-1/2 transform -translate-y-1/2 z-1 cursor-pointer"
+      className="absolute right-4 top-1/2 transform -translate-y-1/2 z-1 cursor-pointer"
       onClick={onClick}
       title="Next image"
     >
@@ -24,7 +24,7 @@ export const NextArrow = ({ onClick }: ArrowProps) => {
 export const PrevArrow = ({ onClick }: ArrowProps) => {
   return (
     <div
-      className="absolute left-3 top-1/2 transform -translate-y-1/2 z-[2] cursor-pointer"
+      className="absolute left-4 top-1/2 transform -translate-y-1/2 z-[2] cursor-pointer"
       onClick={onClick}
       title="Previous image"
     >

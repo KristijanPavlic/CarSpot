@@ -8,8 +8,8 @@ import Slider from "react-slick";
 import ElementTile from "./ElementTile";
 import { Car } from "../types/types";
 import { NextArrow, PrevArrow } from "./CustomArrow";
-import StarIcon from "@/public/star.svg";
 import Link from "next/link";
+import { ClipLoader } from "react-spinners";
 
 interface CarCardProps {
   car: Car;
@@ -35,6 +35,8 @@ const CarCard = ({
   username,
   deleteCar,
 }: CarCardProps) => {
+  const [loading, setLoading] = useState(true); // State for loading spinner
+
   // Slider settings
   const settings = {
     key: car._id,
@@ -62,13 +64,18 @@ const CarCard = ({
                 key={`${car._id}-${idx}`}
                 className="relative w-full h-48 md:h-64 lg:h-80 xl:h-96 focus:outline-none"
               >
+                {loading && (
+                  <div className="flex justify-center items-center h-full">
+                    <ClipLoader color="#BBD01A" size={70} />
+                  </div>
+                )}
                 <Image
                   src={`${uploadUrl}/${car.postId}/${imageName}`}
                   alt={`${car.brand} ${car.model}`}
                   fill
                   className="rounded-xl object-cover bg-center"
+                  onLoadingComplete={() => setLoading(false)} // Set loading to false when loaded
                 />
-                <div className="text-white">{imageName}</div>
               </div>
             ))}
           </Slider>
@@ -99,7 +106,7 @@ const CarCard = ({
           >
             {isFilled ? (
               <svg
-                width="18"
+                width="20"
                 height="17"
                 viewBox="0 0 18 17"
                 fill="none"
@@ -112,7 +119,7 @@ const CarCard = ({
               </svg>
             ) : (
               <svg
-                width="18"
+                width="20"
                 height="17"
                 viewBox="0 0 18 17"
                 fill="none"

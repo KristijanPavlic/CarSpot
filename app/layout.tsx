@@ -10,8 +10,9 @@ const montserratAlternates = Montserrat_Alternates({
 });
 
 export const metadata: Metadata = {
-  title: "Convex DB Experimenting",
-  description: "Convex DB Experimenting",
+  title: "CarSpot",
+  description: "CarSpot",
+  authors: { name: "KriPa Web" },
 };
 
 export default function RootLayout({
