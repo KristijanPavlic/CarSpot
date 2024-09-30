@@ -29,7 +29,8 @@
     "react-spinners": "^0.14.1",
     "slick-carousel": "^1.8.1",
     "tailwind-merge": "^2.5.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "webpack": "^5.95.0"
   },
   "devDependencies": {
     "@types/next": "^9.0.0",
