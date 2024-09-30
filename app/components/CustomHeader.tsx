@@ -7,13 +7,13 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 
-interface HeaderProps {
+interface CustomHeaderProps {
   user: any;
   userId?: string;
   isAdmin?: boolean;
 }
 
-const Header = ({ user, userId, isAdmin }: HeaderProps) => {
+const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
   return (
     <header className=" text-[#212121] hover:text-black mt-4 flex justify-between items-center container m-auto px-5 w-full sticky top-2 z-[99999] transition duration-300 ease-in-out">
       <div className="flex items-center justify-between gap-4 container m-auto bg-[#bbd01a] p-4 rounded-lg shadow-lg">
@@ -85,4 +85,4 @@ const Header = ({ user, userId, isAdmin }: HeaderProps) => {
   );
 };
 
-export default Header;
+export default CustomHeader;
