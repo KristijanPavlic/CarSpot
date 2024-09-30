@@ -1,4 +1,4 @@
-import Header from "@/app/components/Header";
+import Header from "./components/Header";
 import CarSearch from "./components/CarDisplay";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
