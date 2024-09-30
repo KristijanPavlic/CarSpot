@@ -54,6 +54,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
           <Slider {...settings}>
             {car.imagePublicIds.map((imageName, idx) => (
               <div
+                // key should be placed here for each slide
                 key={`${car._id}-${idx}`}
                 className="relative w-full h-48 md:h-64 lg:h-80 xl:h-96 focus:outline-none"
               >
