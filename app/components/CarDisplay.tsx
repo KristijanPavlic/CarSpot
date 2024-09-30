@@ -1,4 +1,3 @@
-// CarSearch.tsx
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
@@ -12,10 +11,9 @@ import { Car } from "../types/types";
 interface CarSearchProps {
   isAdmin: boolean;
   userId: string;
-  username?: string;
 }
 
-const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
+const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
   const queryResult = useQuery(api.cars.get);
   const cars = useMemo(() => queryResult ?? [], [queryResult]);
   const deleteCar = useMutation(api.cars.deleteCar);
@@ -37,7 +35,7 @@ const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
   const [isFormVisible, setIsFormVisible] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
 
-  const isLoading = cars.length === 0;
+  const isLoading = queryResult === undefined; // Check if cars are still loading
 
   // Update filtered cars when filters change
   useEffect(() => {
@@ -161,88 +159,102 @@ const CarSearch = ({ isAdmin, userId, username }: CarSearchProps) => {
   };
 
   return (
-    <div className="p-6">
-      <div className="sticky top-2 mb-6 z-10 bg-[#cccccc] w-fit m-auto px-4 py-4 rounded-lg">
-        <div className="flex justify-center">
-          <h1 className="text-3xl font-bold mb-6 text-center">Search Car</h1>
-          {isScrolled && !isFormVisible && (
-            <button
-              onClick={toggleFormVisibility}
-              className="block mx-auto mb-4 p-2 bg-blue-500 text-white rounded-lg transition-all"
-            >
-              Show Options
-            </button>
-          )}
-          {isFormVisible && isScrolled && (
-            <button
-              onClick={toggleFormVisibility}
-              className="block mx-auto mt-4 p-2 bg-red-500 text-white rounded-lg transition-all"
-            >
-              Hide Options
-            </button>
-          )}
-        </div>
-        <FilterForm
-          selectedBrand={selectedBrand}
-          setSelectedBrand={setSelectedBrand}
-          selectedModel={selectedModel}
-          setSelectedModel={setSelectedModel}
-          selectedYear={selectedYear}
-          setSelectedYear={setSelectedYear}
-          selectedCity={selectedCity}
-          setSelectedCity={setSelectedCity}
-          selectedCountry={selectedCountry}
-          setSelectedCountry={setSelectedCountry}
-          brands={brands}
-          models={models}
-          years={years}
-          cities={cities}
-          countries={countries}
-          clearAllSelections={clearAllSelections}
-          setCurrentPage={setCurrentPage}
-          isFormVisible={isFormVisible}
-          currentPage={currentPage}
-        />
-      </div>
-
+    <div className="px-5 py-10">
       {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[...Array(6)].map((_, index) => (
-            <div key={index} className="animate-pulse rounded-lg">
-              <div className="h-40 bg-gray-400 rounded-md mb-4"></div>
-              <div className="h-6 bg-gray-400 rounded-md mb-2 w-3/4"></div>
-              <div className="h-6 bg-gray-400 rounded-md w-1/4"></div>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div>
-          {filteredCars.length > 0 ? (
-            <>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {currentCars.map((car, index) => (
-                  <CarCard
-                    key={index}
-                    car={car}
-                    isAdmin={isAdmin}
-                    userId={userId}
-                    username={username || ""}
-                    deleteCar={deleteCar}
-                  />
-                ))}
+        // Show loading skeleton while loading
+        <>
+          <div className="grid grid-cols-1 ">
+            {[...Array(1)].map((_, index) => (
+              <div key={index} className="animate-pulse rounded-lg">
+                <div className="h-36 bg-gray-400 rounded-md mb-4"></div>
               </div>
-              {filteredCars.length > carsPerPage && (
-                <PaginationControls
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  handlePrevPage={handlePrevPage}
-                  handleNextPage={handleNextPage}
-                />
+            ))}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="animate-pulse rounded-lg">
+                <div className="h-40 bg-gray-400 rounded-md mb-4"></div>
+                <div className="h-6 bg-gray-400 rounded-md mb-2 w-3/4"></div>
+                <div className="h-6 bg-gray-400 rounded-md w-1/4"></div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : filteredCars.length >= 1 ? (
+        <>
+          {/* Show the filter form and cars if there are cars */}
+          <div className="sticky top-2 mb-6 z-10 bg-[#cccccc] w-fit m-auto px-4 py-4 rounded-lg">
+            <div className="flex justify-center">
+              <h1 className="text-3xl font-bold mb-6 text-center">
+                Search Car
+              </h1>
+              {isScrolled && !isFormVisible && (
+                <button
+                  onClick={toggleFormVisibility}
+                  className="block mx-auto mb-4 p-2 bg-blue-500 text-white rounded-lg transition-all"
+                >
+                  Show Options
+                </button>
               )}
-            </>
-          ) : (
-            <p className="text-center">No cars available.</p>
+              {isFormVisible && isScrolled && (
+                <button
+                  onClick={toggleFormVisibility}
+                  className="block mx-auto mt-4 p-2 bg-red-500 text-white rounded-lg transition-all"
+                >
+                  Hide Options
+                </button>
+              )}
+            </div>
+            <FilterForm
+              selectedBrand={selectedBrand}
+              setSelectedBrand={setSelectedBrand}
+              selectedModel={selectedModel}
+              setSelectedModel={setSelectedModel}
+              selectedYear={selectedYear}
+              setSelectedYear={setSelectedYear}
+              selectedCity={selectedCity}
+              setSelectedCity={setSelectedCity}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+              brands={brands}
+              models={models}
+              years={years}
+              cities={cities}
+              countries={countries}
+              clearAllSelections={clearAllSelections}
+              setCurrentPage={setCurrentPage}
+              isFormVisible={isFormVisible}
+              currentPage={currentPage}
+            />
+          </div>
+
+          {/* Display cars */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {currentCars.map((car, index) => (
+              <CarCard
+                key={index}
+                car={car}
+                isAdmin={isAdmin}
+                userId={userId}
+                deleteCar={deleteCar}
+              />
+            ))}
+          </div>
+
+          {/* Pagination controls */}
+          {filteredCars.length > carsPerPage && (
+            <PaginationControls
+              currentPage={currentPage}
+              totalPages={totalPages}
+              handlePrevPage={handlePrevPage}
+              handleNextPage={handleNextPage}
+            />
           )}
+        </>
+      ) : (
+        // Display no cars found message if no cars
+        <div className="text-center text-2xl font-bold mt-6">
+          No cars found.
         </div>
       )}
     </div>

@@ -9,55 +9,77 @@ import Link from "next/link";
 
 interface HeaderProps {
   user: any;
+  userId?: string;
   isAdmin?: boolean;
 }
 
-const Header = ({ user, isAdmin }: HeaderProps) => {
+const Header = ({ user, userId, isAdmin }: HeaderProps) => {
   return (
-    <header className="bg-[#bbd01a] text-[#212121] p-4 flex justify-between items-center">
-      <div className="flex items-center gap-4">
+    <header className=" text-[#212121] hover:text-black mt-4 flex justify-between items-center container m-auto px-5 w-full sticky top-2 z-[99999] transition duration-300 ease-in-out">
+      <div className="flex items-center justify-between gap-4 container m-auto bg-[#bbd01a] p-4 rounded-lg shadow-lg">
         <Link href="/" className="text-2xl font-bold">
           CarSpot
         </Link>
-        {user && (
-          <Link href="/upload" className="text-sm hover:text-gray-300">
-            Upload
-          </Link>
-        )}
-      </div>
-      <div className="flex items-center gap-4 z-[999]">
-        {user ? (
-          <div className="relative group">
-            <div className="flex items-center gap-2 cursor-pointer">
-              <div className="profile-icon-container">
-                <Image
-                  src={user?.picture || "/default-profile.png"} // Default image if no profile picture
-                  width={40}
-                  height={40}
-                  alt="profile picture"
-                  className="rounded-full"
-                />
-              </div>
-            </div>
-
-            <div className="dropdown-menu w-max px-4 py-2 absolute right-0 mt-2 bg-[#D9D9D9] text-black p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-              <p className="text-sm mb-2 p-2">Welcome {user.given_name}</p>
-              <LogoutLink className="text-base font-medium mt-4">
-                <div className="flex gap-3 p-2 rounded-lg hover:bg-[#acacac] transition duration-300 ease-in-out">
-                  Log out
-                  <span className="material-symbols-outlined">logout</span>
+        <div className="flex items-center gap-4">
+          {user && (
+            <Link
+              href="/upload"
+              className="text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 transition duration-300 ease-in-out"
+            >
+              Upload
+            </Link>
+          )}
+          <div className="flex items-center gap-4 z-[999]">
+            {user ? (
+              <div className="relative group">
+                <div className="flex items-center gap-2 cursor-pointer">
+                  <div className="profile-icon-container">
+                    <Image
+                      src={user?.picture || "/default-profile.png"} // Default image if no profile picture
+                      width={40}
+                      height={40}
+                      alt="profile picture"
+                      className="rounded-full"
+                    />
+                  </div>
                 </div>
-              </LogoutLink>
-            </div>
+                <div className="dropdown-menu flex flex-col gap-2 w-max px-4 py-2 absolute right-[-1rem] mt-1 bg-[#bbd01a] text-black p-2 rounded-lg shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                  <p className="text-sm p-2">Welcome {user.given_name}</p>
+                  <div className="w-full h-[1px] bg-[#212121]"></div>
+                  <Link
+                    href={`/${userId}`}
+                    className="p-2 rounded-lg hover:bg-[#212121] hover:text-white  transition duration-300 ease-in-out"
+                  >
+                    Profile
+                  </Link>
+                  {isAdmin && (
+                    <Link
+                      href="/"
+                      className="p-2 rounded-lg hover:bg-[#212121] hover:text-white  transition duration-300 ease-in-out"
+                    >
+                      Dashboard
+                    </Link>
+                  )}
+                  <LogoutLink className="text-base font-medium">
+                    <div className="flex gap-3 p-2 rounded-lg hover:bg-[#212121] hover:text-white  transition duration-300 ease-in-out">
+                      Log out
+                      <span className="material-symbols-outlined">logout</span>
+                    </div>
+                  </LogoutLink>
+                </div>
+              </div>
+            ) : (
+              <>
+                <LoginLink className="text-base hover:bg-[#212121] rounded-lg hover:text-white p-2 transition duration-300 ease-in-out">
+                  Login
+                </LoginLink>
+                <RegisterLink className="text-base hover:bg-[#212121] rounded-lg hover:text-white p-2 transition duration-300 ease-in-out">
+                  Sign up
+                </RegisterLink>
+              </>
+            )}
           </div>
-        ) : (
-          <>
-            <LoginLink className="text-sm hover:text-gray-300">Login</LoginLink>
-            <RegisterLink className="text-sm hover:text-gray-300">
-              Sign up
-            </RegisterLink>
-          </>
-        )}
+        </div>
       </div>
     </header>
   );

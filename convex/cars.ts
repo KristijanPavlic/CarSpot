@@ -1,11 +1,20 @@
 import { query, mutation } from "./_generated/server";
 import { v } from "convex/values";
-import cloudinary from "../cloudinaryConfig";
 
 export const get = query({
   args: {},
   handler: async (ctx) => {
     return await ctx.db.query("cars").collect();
+  },
+});
+
+export const getCarsByUserId = query({
+  args: { userId: v.string() }, // Expect a userId string argument
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("cars") // Query the "cars" collection
+      .filter((q) => q.eq(q.field("userId"), args.userId)) // Filter cars by userId
+      .collect(); // Return all matching documents
   },
 });
 
@@ -43,3 +52,4 @@ export const deleteCar = mutation({
     return "Car deleted successfully";
   },
 });
+

@@ -14,8 +14,7 @@ import { ClipLoader } from "react-spinners";
 interface CarCardProps {
   car: Car;
   isAdmin: boolean;
-  userId: string;
-  username: string;
+  userId?: string | null;
   deleteCar: ReactMutation<
     FunctionReference<
       "mutation",
@@ -28,13 +27,7 @@ interface CarCardProps {
   >;
 }
 
-const CarCard = ({
-  car,
-  isAdmin,
-  userId,
-  username,
-  deleteCar,
-}: CarCardProps) => {
+const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   const [loading, setLoading] = useState(true); // State for loading spinner
 
   // Slider settings
@@ -55,7 +48,7 @@ const CarCard = ({
   const [isFilled, setIsFilled] = useState(false);
 
   return (
-    <div className="h-fit max-w-[645px] bg-[#212121] shadow-lg rounded-xl hover:shadow-xl transition-shadow">
+    <div className="h-fit bg-[#212121] shadow-lg rounded-xl hover:shadow-xl transition-shadow">
       <div className="relative">
         {car.imagePublicIds && car.imagePublicIds.length > 0 ? (
           <Slider {...settings}>
@@ -149,7 +142,7 @@ const CarCard = ({
             <div>
               Spotted by:{" "}
               <Link
-                href="#"
+                href={`/${car.userId}`}
                 className="hover:underline transition duration-300 ease-in-out"
               >
                 {car.username}
@@ -158,7 +151,7 @@ const CarCard = ({
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 float-right pr-4 pb-4">
+      <div className="flex flex-wrap gap-4 float-right pr-4 py-4">
         <Link
           href={`/car/${car._id}`}
           passHref
@@ -168,7 +161,8 @@ const CarCard = ({
         </Link>
       </div>
       {(isAdmin || userId === car.userId) && (
-        <div className="flex flex-wrap gap-4 float-right px-4 pb-4">
+        <div className="flex flex-wrap gap-4 px-4 py-4">
+          {/* VIDJETI}
           <button
             className="block w-fit p-4 bg-[#D9D9D9] text-[#212121] rounded-xl py-2 hover:bg-[#ffffff] transition duration-300 ease-in-out"
             // onClick={() => editCar({ id: car._id })}
@@ -177,7 +171,7 @@ const CarCard = ({
               Edit
               <span className="material-symbols-outlined">edit</span>
             </div>
-          </button>
+          </button> */}
           <button
             className="block w-fit p-4 bg-[#B71C1C] text-white rounded-xl py-2 hover:bg-red-400 transition duration-300 ease-in-out"
             onClick={() => {
