@@ -7,11 +7,12 @@ export default async function UserPage() {
   const user = await getUser();
 
   const isAdmin = user?.id === process.env.ADMIN_ID;
+  const adminId = process.env.ADMIN_ID;
 
   return (
     <main>
       <Header user={user} isAdmin={isAdmin} />
-      <UserCars />
+      <UserCars loggedInUserId={user?.id} adminId={adminId} />
     </main>
   );
 }

@@ -1,4 +1,3 @@
-// CarCard.tsx
 import React, { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
@@ -14,7 +13,7 @@ import { ClipLoader } from "react-spinners";
 interface CarCardProps {
   car: Car;
   isAdmin: boolean;
-  userId?: string | null;
+  userId?: string;
   deleteCar: ReactMutation<
     FunctionReference<
       "mutation",
@@ -46,6 +45,8 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
 
   const uploadUrl = `https://res.cloudinary.com/dn0ngtrru/image/upload/v1726423541`;
   const [isFilled, setIsFilled] = useState(false);
+
+  console.log("admin", isAdmin);
 
   return (
     <div className="h-fit bg-[#212121] shadow-lg rounded-xl hover:shadow-xl transition-shadow">

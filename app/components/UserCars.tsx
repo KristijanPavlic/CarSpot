@@ -6,7 +6,12 @@ import { api } from "@/convex/_generated/api";
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
 
-export default function UserCars() {
+interface UserCarsProps {
+  loggedInUserId?: string | undefined;
+  adminId: string | undefined;
+}
+
+export default function UserCars({ loggedInUserId, adminId }: UserCarsProps) {
   const path = usePathname();
   const userIdFromPath = path.slice(1);
 
@@ -28,8 +33,8 @@ export default function UserCars() {
             <CarCard
               key={car._id}
               car={car}
-              isAdmin={false}
-              userId={userIdFromPath}
+              isAdmin={adminId === loggedInUserId}
+              userId={loggedInUserId}
               deleteCar={deleteCar}
             />
           ))}
