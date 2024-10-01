@@ -19,7 +19,6 @@ interface FilterFormProps {
   clearAllSelections: (e: React.MouseEvent<HTMLButtonElement>) => void;
   currentPage: number;
   setCurrentPage: React.Dispatch<React.SetStateAction<number>>;
-  isFormVisible: boolean;
 }
 
 const FilterForm = ({
@@ -40,13 +39,10 @@ const FilterForm = ({
   countries,
   clearAllSelections,
   setCurrentPage,
-  isFormVisible,
 }: FilterFormProps) => {
   return (
     <form
-      className={`flex flex-wrap gap-4 justify-center transition-opacity duration-500 ${
-        isFormVisible ? "opacity-100 h-auto" : "opacity-0 h-0 overflow-hidden"
-      }`}
+      className={`grid xl:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 transition-opacity duration-500 `}
     >
       <select
         name="brand"
@@ -154,9 +150,9 @@ const FilterForm = ({
       {/* Clear all button */}
       <button
         onClick={clearAllSelections}
-        className="block mx-auto mt-4 p-2 bg-yellow-500 text-black rounded-lg transition-all"
+        className="block mx-auto p-2 bg-yellow-500 text-[#212121] rounded-lg"
       >
-        Clear All
+        Clear all
       </button>
     </form>
   );

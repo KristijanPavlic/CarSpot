@@ -1,3 +1,8 @@
+"use client";
+
+import React, { useContext } from "react";
+import { SearchContext } from "../context/SearchContext";
+
 import {
   RegisterLink,
   LoginLink,
@@ -6,6 +11,7 @@ import {
 
 import Image from "next/image";
 import Link from "next/link";
+import FilterForm from "./FilterForm";
 
 interface CustomHeaderProps {
   user: any;
@@ -14,19 +20,33 @@ interface CustomHeaderProps {
 }
 
 const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
+  const { isSearchVisible, toggleSearchVisibility } = useContext(SearchContext);
+
   return (
-    <header className=" text-[#212121] hover:text-black mt-4 flex justify-between items-center container m-auto px-5 w-full sticky top-2 z-[99999] transition duration-300 ease-in-out">
+    <header className=" text-[#212121] hover:text-black mt-4 flex justify-between items-center container m-auto px-5 w-full sticky lg:top-2 top-6 z-[99999] transition duration-300 ease-in-out">
       <div className="flex items-center justify-between gap-4 container m-auto bg-[#bbd01a] p-4 rounded-lg shadow-lg">
         <Link href="/" className="text-2xl font-bold">
           CarSpot
         </Link>
+
         <div className="flex items-center gap-4">
+          <button
+            onClick={toggleSearchVisibility}
+            className={`flex items-center gap-1 text-base font-semibold rounded-lg p-2 transition duration-300 ease-in-out ${
+              isSearchVisible
+                ? "bg-[#212121] text-white"
+                : "hover:bg-[#212121] hover:text-white"
+            }`}
+          >
+            Search
+            <span className="material-symbols-outlined">search</span>
+          </button>
           {user && (
             <Link
               href="/upload"
               className="text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 transition duration-300 ease-in-out"
             >
-              Upload
+              Post a spot
             </Link>
           )}
           <div className="flex items-center gap-4 z-[999]">

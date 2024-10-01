@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useContext, useMemo } from "react";
+import { SearchContext } from "../context/SearchContext";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import CarCard from "./CarCard";
@@ -32,8 +33,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
   // State for filtered data
   const [filteredCars, setFilteredCars] = useState<Car[]>(cars);
 
-  const [isFormVisible, setIsFormVisible] = useState(true);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const { isSearchVisible } = useContext(SearchContext);
 
   const isLoading = queryResult === undefined; // Check if cars are still loading
 
@@ -70,23 +70,6 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
     selectedCountry,
     cars,
   ]);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollPosition = window.scrollY;
-      setIsScrolled(scrollPosition > 100);
-
-      if (scrollPosition <= 100) {
-        setIsFormVisible(true);
-      }
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
-  const toggleFormVisibility = () => {
-    setIsFormVisible(!isFormVisible);
-  };
 
   const clearAllSelections = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
@@ -182,51 +165,36 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
         </>
       ) : filteredCars.length >= 1 ? (
         <>
-          {/* Show the filter form and cars if there are cars */}
-          <div className="sticky top-2 mb-6 z-10 bg-[#cccccc] w-fit m-auto px-4 py-4 rounded-lg">
-            <div className="flex justify-center">
-              <h1 className="text-3xl font-bold mb-6 text-center">
-                Search Car
-              </h1>
-              {isScrolled && !isFormVisible && (
-                <button
-                  onClick={toggleFormVisibility}
-                  className="block mx-auto mb-4 p-2 bg-blue-500 text-white rounded-lg transition-all"
-                >
-                  Show Options
-                </button>
-              )}
-              {isFormVisible && isScrolled && (
-                <button
-                  onClick={toggleFormVisibility}
-                  className="block mx-auto mt-4 p-2 bg-red-500 text-white rounded-lg transition-all"
-                >
-                  Hide Options
-                </button>
-              )}
+          {isSearchVisible && (
+            <div
+              className={`sticky top-24 mb-6 z-10 bg-[#cccccc] w-fit m-auto p-3 rounded-lg overflow-hidden transform origin-top transition-all duration-500 ease-in-out ${
+                isSearchVisible
+                  ? "opacity-100 scale-y-100"
+                  : "opacity-0 scale-y-0"
+              }`}
+            >
+              <FilterForm
+                selectedBrand={selectedBrand}
+                setSelectedBrand={setSelectedBrand}
+                selectedModel={selectedModel}
+                setSelectedModel={setSelectedModel}
+                selectedYear={selectedYear}
+                setSelectedYear={setSelectedYear}
+                selectedCity={selectedCity}
+                setSelectedCity={setSelectedCity}
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
+                brands={brands}
+                models={models}
+                years={years}
+                cities={cities}
+                countries={countries}
+                clearAllSelections={clearAllSelections}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+              />
             </div>
-            <FilterForm
-              selectedBrand={selectedBrand}
-              setSelectedBrand={setSelectedBrand}
-              selectedModel={selectedModel}
-              setSelectedModel={setSelectedModel}
-              selectedYear={selectedYear}
-              setSelectedYear={setSelectedYear}
-              selectedCity={selectedCity}
-              setSelectedCity={setSelectedCity}
-              selectedCountry={selectedCountry}
-              setSelectedCountry={setSelectedCountry}
-              brands={brands}
-              models={models}
-              years={years}
-              cities={cities}
-              countries={countries}
-              clearAllSelections={clearAllSelections}
-              setCurrentPage={setCurrentPage}
-              isFormVisible={isFormVisible}
-              currentPage={currentPage}
-            />
-          </div>
+          )}
 
           {/* Display cars */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
