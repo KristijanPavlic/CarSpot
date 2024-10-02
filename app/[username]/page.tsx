@@ -1,6 +1,6 @@
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import UserCars from "../components/UserCars";
 import Header from "../components/CustomHeader";
+import UserCars from "../components/UserCars";
 
 export default async function UserPage() {
   const { getUser } = getKindeServerSession();

@@ -18,6 +18,16 @@ export const getCarsByUserId = query({
   },
 });
 
+export const getCarById = query({
+  args: { postId: v.string() },
+  handler: async (ctx, args) => {
+    return await ctx.db
+      .query("cars")
+      .filter((q) => q.eq(q.field("_id"), args.postId))
+      .collect();
+  },
+});
+
 export const createCar = mutation({
   args: {
     brand: v.string(),
@@ -52,4 +62,3 @@ export const deleteCar = mutation({
     return "Car deleted successfully";
   },
 });
-

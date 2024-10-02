@@ -1,12 +1,25 @@
-interface PageProps {
+import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import PostPageClient from "../../components/PostPageClient";
+
+interface PostPageServerProps {
   params: {
-    username: string;
-    postSlug: string;
+    carId: string;
   };
 }
 
-const CarPage = ({ params }: PageProps) => {
-  return <div>Post details</div>;
-};
+export default async function PostPageServer({ params }: PostPageServerProps) {
+  const { carId } = params;
+  const { getUser } = getKindeServerSession();
+  const user = await getUser();
 
-export default CarPage;
+  const isAdmin = user?.id === process.env.ADMIN_ID;
+
+  return (
+    <PostPageClient
+      user={user}
+      userId={user?.id}
+      isAdmin={isAdmin}
+      carId={carId}
+    />
+  );
+}

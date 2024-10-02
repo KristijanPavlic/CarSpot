@@ -46,8 +46,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   const uploadUrl = `https://res.cloudinary.com/dn0ngtrru/image/upload/v1726423541`;
   const [isFilled, setIsFilled] = useState(false);
 
-  console.log("admin", isAdmin);
-
   return (
     <div className="h-fit bg-[#212121] shadow-lg rounded-xl hover:shadow-xl transition-shadow">
       <div className="relative">
