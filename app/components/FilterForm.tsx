@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 interface FilterFormProps {
   selectedBrand: string;
@@ -42,7 +42,7 @@ const FilterForm = ({
 }: FilterFormProps) => {
   return (
     <form
-      className={`grid xl:grid-cols-6 md:grid-cols-3 grid-cols-2 gap-4 transition-opacity duration-500 `}
+      className={`${selectedBrand !== "" ? "xl:grid-cols-6 md:grid-cols-3 grid-cols-2" : "xl:grid-cols-5 md:grid-cols-3 grid-cols-2"} grid gap-4`}
     >
       <select
         name="brand"
@@ -148,12 +148,14 @@ const FilterForm = ({
         ))}
       </select>
       {/* Clear all button */}
-      <button
-        onClick={clearAllSelections}
-        className="block mx-auto p-2 bg-yellow-500 text-[#212121] rounded-lg"
-      >
-        Clear all
-      </button>
+      {selectedBrand !== "" && (
+        <button
+          onClick={clearAllSelections}
+          className={`block p-2 bg-yellow-500 text-[#212121] rounded-lg hover:bg-yellow-600 hover:cursor-pointer transition duration-300 ease-in-out`}
+        >
+          Clear all
+        </button>
+      )}
     </form>
   );
 };

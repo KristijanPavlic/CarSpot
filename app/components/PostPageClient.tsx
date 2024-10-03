@@ -6,7 +6,6 @@ import { api } from "@/convex/_generated/api";
 import { useMemo } from "react";
 import CarCard from "./CarCard";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 import UserProfileCard from "./UserProfileCard";
 import PostMiniMap from "./PostMiniMap";
 

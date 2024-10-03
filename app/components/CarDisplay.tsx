@@ -1,3 +1,4 @@
+// CarSearch.js
 "use client";
 
 import React, { useState, useEffect, useContext, useMemo } from "react";
@@ -142,7 +143,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
   };
 
   return (
-    <div className="px-5 py-10">
+    <div className={`py-10 m-auto transition-all duration-300 ease-in-out pl-20 pr-4`}>
       {isLoading ? (
         // Show loading skeleton while loading
         <>
@@ -167,7 +168,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
         <>
           {isSearchVisible && (
             <div
-              className={`sticky top-24 mb-6 z-10 bg-[#cccccc] w-fit m-auto p-3 rounded-lg overflow-hidden transform origin-top transition-all duration-500 ease-in-out ${
+              className={`sticky top-24 md:top-12 mb-6 z-10 bg-[#ccccccf3] m-auto w-full md:w-fit p-3 rounded-lg overflow-hidden transform origin-top transition-all duration-500 ease-in-out ${
                 isSearchVisible
                   ? "opacity-100 scale-y-100"
                   : "opacity-0 scale-y-0"

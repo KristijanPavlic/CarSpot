@@ -44,6 +44,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   };
 
   const uploadUrl = `https://res.cloudinary.com/dn0ngtrru/image/upload/v1726423541`;
+
   const [isFilled, setIsFilled] = useState(false);
 
   return (
@@ -90,7 +91,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
         />
       </div>
       <div className="p-4 relative">
-        <div className="absolute right-4">
+        <button className="absolute right-4">
           <span
             className="transition-all duration-300 ease-in-out hover:cursor-pointer"
             onMouseEnter={() => setIsFilled(true)}
@@ -125,7 +126,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
               </svg>
             )}
           </span>
-        </div>
+        </button>
         <h2 className="text-2xl text-white font-bold">
           {car.brand} {car.model}
         </h2>

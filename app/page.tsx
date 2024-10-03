@@ -1,20 +1,18 @@
 import Header from "./components/CustomHeader";
 import CarSearch from "./components/CarDisplay";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { getUserSession } from "./utils/getUserSession";
 
-import "./globals.css";
 import PostSpotButton from "./components/PostSpotButton";
 
-export default async function Home() {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
+import "./globals.css";
 
-  const isAdmin = user?.id === process.env.ADMIN_ID;
+export default async function Home() {
+  const { user, isAdmin } = await getUserSession();
 
   return (
     <>
+      <Header user={user} userId={user?.id} isAdmin={isAdmin} />
       <main>
-        <Header user={user} userId={user?.id} isAdmin={isAdmin} />
         <CarSearch isAdmin={isAdmin} userId={user?.id} />
       </main>
       <PostSpotButton />
