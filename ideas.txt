@@ -1,16 +1,8 @@
--zavrsiti user profile, pass prop tko je napravio post
--popraviti postId imageName i kako se zove folder i slike u Cloudinary i kako se dodjeljuje +
--dodati hero section
--preraditi nav menu
--dodati "Post a spot" sticky gumb
--doraditi serach
+-doraditi meni i responzivnost
+-search uredi gdje se nalazi i kako se ponaša
+-napraviti hero section
 -dodati "Favourites" funkcionalnost sa zvjedicom na post-u
--dodati creatora post-a
--napraviti db za slike i povezati ju sa stranicom
--dodati edit funkcionalnost na post
--user profile "My posts" funkcionalnost
 -validacija objave
--logo uz brand
--logo za električne i benzince
--napraviti dynmaic route za post-ove
+-logo uz brand ?
+-logo za električne i benzince ?
 -karta post-ova
