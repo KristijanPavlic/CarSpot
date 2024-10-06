@@ -1,5 +1,4 @@
--doraditi meni i responzivnost
--search uredi gdje se nalazi i kako se ponaša
+-urediti Welcome username kako i gdje ce biti
 -napraviti hero section
 -dodati "Favourites" funkcionalnost sa zvjedicom na post-u
 -validacija objave

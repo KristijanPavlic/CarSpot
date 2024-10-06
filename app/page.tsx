@@ -15,7 +15,7 @@ export default async function Home() {
       <main>
         <CarSearch isAdmin={isAdmin} userId={user?.id} />
       </main>
-      <PostSpotButton />
+      {/* <PostSpotButton /> */}
     </>
   );
 }

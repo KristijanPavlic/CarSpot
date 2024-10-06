@@ -1,20 +1,42 @@
-// adding multiple times new images and removing any image causes bug must be fixed
 "use client";
 
 import { useState, useEffect } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import Link from "next/link";
 import axios from "axios";
 import { AiOutlineDelete, AiOutlineEye } from "react-icons/ai";
-import Modal from "react-modal"; // Install this for full-screen modal
+import Modal from "react-modal";
 import Image from "next/image";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io"; // Icons for slider arrows
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import { z } from "zod";
 
 interface CreateCarProps {
   userId: string;
   username: string;
 }
+
+const carSchema = z.object({
+  brand: z.string().min(2, "Brand must be at least 2 characters."),
+  model: z.string().min(1, "Model must be at least 1 character."),
+  year: z
+    .string()
+    .regex(/^\d{4}$/, "Year must be a 4-digit number.")
+    .refine(
+      (val) => {
+        const yearNum = parseInt(val);
+        const currentYear = new Date().getFullYear();
+        return yearNum >= 1900 && yearNum <= currentYear + 1;
+      },
+      (val) => ({
+        message: `Year must be between 1900 and ${new Date().getFullYear() + 1}.`,
+      })
+    ),
+  city: z.string().min(1, "City is required."),
+  country: z.string().min(1, "Country is required."),
+  images: z
+    .array(z.instanceof(File))
+    .nonempty("At least one image is required."),
+});
 
 const CreateCar = ({ userId, username }: CreateCarProps) => {
   const [brand, setBrand] = useState("");
@@ -22,12 +44,11 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   const [year, setYear] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [images, setImages] = useState<File[]>([]); // Store selected files as an array
-  const [previewImages, setPreviewImages] = useState<
-    { file: File; url: string }[]
-  >([]); // For image previews
-  const [imageUrls, setImageUrls] = useState<string[]>([]); // Store the URL.createObjectURL objects
+  const [imagesData, setImagesData] = useState<{ file: File; url: string }[]>(
+    []
+  ); // Combined images and preview URLs
   const [fullScreenIndex, setFullScreenIndex] = useState<number | null>(null); // For full-screen modal
+  const [errors, setErrors] = useState<z.ZodIssue[]>([]); // Validation errors
 
   const createCar = useMutation(api.cars.createCar);
 
@@ -60,10 +81,30 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
+    // Prepare data for validation
+    const formData = {
+      brand,
+      model,
+      year,
+      city,
+      country,
+      images: imagesData.map((img) => img.file),
+    };
+
+    // Validate using Zod
+    const result = carSchema.safeParse(formData);
+
+    if (!result.success) {
+      // If validation fails, extract and set errors
+      setErrors(result.error.issues);
+      return;
+    }
+
+    // If validation passes, proceed with submission
     const imagePublicIds: string[] = [];
-    if (images.length > 0) {
-      for (const file of images) {
-        const publicId = await handleImageUpload(file);
+    if (imagesData.length > 0) {
+      for (const imgData of imagesData) {
+        const publicId = await handleImageUpload(imgData.file);
         imagePublicIds.push(publicId);
       }
     }
@@ -86,48 +127,58 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
     setYear("");
     setCity("");
     setCountry("");
-    setImages([]);
-    setPreviewImages([]);
+
+    // Revoke object URLs and reset imagesData
+    imagesData.forEach((img) => URL.revokeObjectURL(img.url));
+    setImagesData([]);
+    setErrors([]);
+  };
+
+  // Function to get error message for a field
+  const getError = (fieldName: string) => {
+    const error = errors.find((err) => err.path[0] === fieldName);
+    return error ? error.message : null;
   };
 
   // Handle image selection and generate previews
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFiles = Array.from(e.target.files);
-      setImages((prev) => [...prev, ...selectedFiles]);
 
-      const newPreviews = selectedFiles.map((file) => ({
+      const newImagesData = selectedFiles.map((file) => ({
         file,
         url: URL.createObjectURL(file),
       }));
 
-      setImageUrls((prev) => [...prev, ...newPreviews.map((img) => img.url)]);
-      setPreviewImages((prev) => [...prev, ...newPreviews]);
+      setImagesData((prev) => [...prev, ...newImagesData]);
     }
   };
 
   // Remove image from the preview and from the state
   const removeImage = (index: number) => {
-    const updatedPreviews = [...previewImages];
-    updatedPreviews.splice(index, 1);
+    setImagesData((prev) => {
+      const newImagesData = [...prev];
+      const removedImage = newImagesData.splice(index, 1)[0];
 
-    setImageUrls((prev) => prev.filter((_, i) => i !== index));
-    setPreviewImages(updatedPreviews);
-    setImages((prev) => prev.filter((_, i) => i !== index));
+      // Revoke the object URL to free memory
+      URL.revokeObjectURL(removedImage.url);
+
+      return newImagesData;
+    });
   };
 
   // Cleanup the URL.createObjectURL objects to avoid memory leaks
   useEffect(() => {
     return () => {
-      imageUrls.forEach((url) => URL.revokeObjectURL(url));
+      imagesData.forEach((img) => URL.revokeObjectURL(img.url));
     };
-  }, [imageUrls]);
+  }, [imagesData]);
 
   // Navigate to the previous image in full screen
   const previousImage = () => {
     if (fullScreenIndex !== null) {
       setFullScreenIndex((prevIndex) =>
-        prevIndex! > 0 ? prevIndex! - 1 : previewImages.length - 1
+        prevIndex! > 0 ? prevIndex! - 1 : imagesData.length - 1
       );
     }
   };
@@ -136,18 +187,15 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   const nextImage = () => {
     if (fullScreenIndex !== null) {
       setFullScreenIndex((prevIndex) =>
-        prevIndex! < previewImages.length - 1 ? prevIndex! + 1 : 0
+        prevIndex! < imagesData.length - 1 ? prevIndex! + 1 : 0
       );
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-lg w-full space-y-8 bg-gray-800 p-8 rounded-lg shadow-xl">
-        <Link href="/" className="text-[#D0E600] hover:underline">
-          &larr; Home
-        </Link>
-        <h1 className="text-3xl font-bold text-white">Upload Car</h1>
+    <div className="min-h-screen bg-[#525252] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-lg w-full space-y-8 bg-[#212121] p-8 rounded-lg shadow-xl">
+        <h1 className="text-3xl font-bold text-white">Create a Spot</h1>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {/* Brand Input */}
           <div className="rounded-md shadow-sm flex flex-col">
@@ -163,8 +211,11 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-gray-700 placeholder-gray-400 text-white focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
               />
+              {getError("brand") && (
+                <p className="text-red-500 text-sm mt-1">{getError("brand")}</p>
+              )}
             </div>
             {/* Model Input */}
             <div className="mt-4">
@@ -179,8 +230,11 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-gray-700 placeholder-gray-400 text-white focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
               />
+              {getError("model") && (
+                <p className="text-red-500 text-sm mt-1">{getError("model")}</p>
+              )}
             </div>
             {/* Year Input */}
             <div className="mt-4">
@@ -195,8 +249,11 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-gray-700 placeholder-gray-400 text-white focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
               />
+              {getError("year") && (
+                <p className="text-red-500 text-sm mt-1">{getError("year")}</p>
+              )}
             </div>
             {/* City Input */}
             <div className="mt-4">
@@ -211,8 +268,11 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-gray-700 placeholder-gray-400 text-white focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
               />
+              {getError("city") && (
+                <p className="text-red-500 text-sm mt-1">{getError("city")}</p>
+              )}
             </div>
             {/* Country Input */}
             <div className="mt-4">
@@ -227,8 +287,13 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-gray-700 placeholder-gray-400 text-white focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
               />
+              {getError("country") && (
+                <p className="text-red-500 text-sm mt-1">
+                  {getError("country")}
+                </p>
+              )}
             </div>
           </div>
 
@@ -244,13 +309,16 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
               accept="image/*"
               multiple
               onChange={handleImageChange}
-              className="block w-full text-base mt-1 text-gray-400 border border-gray-600 rounded-md cursor-pointer bg-gray-700 focus:outline-none"
+              className="block w-full text-base mt-1 text-[#6e6e6e] border border-gray-600 rounded-md cursor-pointer bg-[#C6C6C6] focus:outline-none"
             />
+            {getError("images") && (
+              <p className="text-red-500 text-sm mt-1">{getError("images")}</p>
+            )}
           </div>
 
           {/* Image Preview */}
           <div className="grid grid-cols-2 gap-4 mt-6">
-            {previewImages.map((img, index) => (
+            {imagesData.map((img, index) => (
               <div key={index} className="relative group h-32 w-full">
                 <Image
                   src={img.url}
@@ -319,7 +387,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                   <IoIosArrowBack />
                 </button>
                 <Image
-                  src={previewImages[fullScreenIndex].url}
+                  src={imagesData[fullScreenIndex].url}
                   width={1200}
                   height={800}
                   alt="Full Screen"
@@ -340,9 +408,9 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
           <div className="mt-6">
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-[#D0E600] hover:bg-[#c0d400] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#D0E600]"
+              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-[#BBD01A] hover:bg-[#BBD01A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BBD01A]"
             >
-              Create Car
+              Create Spot
             </button>
           </div>
         </form>

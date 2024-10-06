@@ -23,9 +23,14 @@ export default function UserCars({ loggedInUserId, adminId }: UserCarsProps) {
   const deleteCar = useMutation(api.cars.deleteCar);
 
   return (
-    <section className="p-6">
-      <h2 className="text-3xl font-bold">
-        Posts by {cars.map((car) => car.username)[0]}
+    <section className="pl-[4.5rem] pr-4 p-10">
+      <h2 className="text-3xl font-bold text-[#D9D9D9]">
+        {
+          // If the user is viewing their own profile, show "My Spots". Otherwise, show "Spots by [username]"
+          cars.map((car) => car.userId)[0] === loggedInUserId
+            ? "My Spots"
+            : `Spots by ${cars.map((car) => car.username)[0]}`
+        }
       </h2>
       {cars.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">

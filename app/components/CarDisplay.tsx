@@ -143,32 +143,23 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
   };
 
   return (
-    <div className={`py-10 m-auto transition-all duration-300 ease-in-out pl-20 pr-4`}>
+    <div className={`pl-[4.5rem] pr-4 transition-all duration-300 ease-in-out`}>
       {isLoading ? (
         // Show loading skeleton while loading
-        <>
-          <div className="grid grid-cols-1 ">
-            {[...Array(1)].map((_, index) => (
-              <div key={index} className="animate-pulse rounded-lg">
-                <div className="h-36 bg-gray-400 rounded-md mb-4"></div>
-              </div>
-            ))}
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[...Array(6)].map((_, index) => (
-              <div key={index} className="animate-pulse rounded-lg">
-                <div className="h-40 bg-gray-400 rounded-md mb-4"></div>
-                <div className="h-6 bg-gray-400 rounded-md mb-2 w-3/4"></div>
-                <div className="h-6 bg-gray-400 rounded-md w-1/4"></div>
-              </div>
-            ))}
-          </div>
-        </>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-10">
+          {[...Array(6)].map((_, index) => (
+            <div key={index} className="animate-pulse rounded-lg">
+              <div className="h-40 bg-gray-400 rounded-md mb-4"></div>
+              <div className="h-6 bg-gray-400 rounded-md mb-2 w-3/4"></div>
+              <div className="h-6 bg-gray-400 rounded-md w-1/4"></div>
+            </div>
+          ))}
+        </div>
       ) : filteredCars.length >= 1 ? (
         <>
           {isSearchVisible && (
             <div
-              className={`sticky top-24 md:top-12 mb-6 z-10 bg-[#ccccccf3] m-auto w-full md:w-fit p-3 rounded-lg overflow-hidden transform origin-top transition-all duration-500 ease-in-out ${
+              className={`sticky top-0 z-10 bg-[#ccccccf3] m-auto w-full md:w-fit p-3 rounded-b-lg overflow-hidden transform origin-top transition-all duration-500 ease-in-out ${
                 isSearchVisible
                   ? "opacity-100 scale-y-100"
                   : "opacity-0 scale-y-0"
@@ -198,7 +189,7 @@ const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
           )}
 
           {/* Display cars */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="py-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {currentCars.map((car, index) => (
               <CarCard
                 key={index}
