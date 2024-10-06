@@ -193,7 +193,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-[#525252] flex items-center justify-center py-10 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#525252] flex items-center justify-center py-10 pl-[4.5rem] pr-4">
       <div className="max-w-lg w-full space-y-8 bg-[#212121] p-8 rounded-lg shadow-xl">
         <h1 className="text-3xl font-bold text-white">Create a Spot</h1>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
