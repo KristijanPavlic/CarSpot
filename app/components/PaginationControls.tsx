@@ -18,7 +18,7 @@ const PaginationControls = ({
       <button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
-        className={`px-2 py-1 mx-2 bg-gray-200 rounded-md ${
+        className={`px-2 py-1 mx-2 bg-gray-200 hover:bg-gray-300 transition-all duration-300 ease-in-out rounded-md ${
           currentPage === 1 ? "cursor-not-allowed opacity-50" : ""
         }`}
       >
@@ -31,7 +31,7 @@ const PaginationControls = ({
       <button
         onClick={handleNextPage}
         disabled={currentPage === totalPages}
-        className={`px-2 py-2 mx-2 bg-gray-200 rounded-md ${
+        className={`px-2 py-2 mx-2 bg-gray-200 hover:bg-gray-300 transition-all duration-300 ease-in-out rounded-md ${
           currentPage === totalPages ? "cursor-not-allowed opacity-50" : ""
         }`}
       >

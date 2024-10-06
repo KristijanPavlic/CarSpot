@@ -5,5 +5,5 @@ export default function middleware(req: NextRequest) {
   return withAuth(req);
 }
 export const config = {
-  matcher: ["/upload"],
+  matcher: ["/upload", "/profile", "/dashboard", "/favourites", "/undefined"],
 };

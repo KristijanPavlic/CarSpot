@@ -49,10 +49,10 @@ export default function PostPageClient({
             ))}
           </div>
           <div className="flex flex-col gap-6 w-[40%]">
-            <div className="bg-slate-600">
+            <div className="bg-[#212121] rounded-lg">
               <PostMiniMap />
             </div>
-            <div className="bg-slate-800">
+            <div className="bg-[#212121] rounded-lg">
               <UserProfileCard />
             </div>
           </div>
