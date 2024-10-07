@@ -9,8 +9,6 @@ import { LoginLink, LogoutLink } from "@kinde-oss/kinde-auth-nextjs/components";
 import Image from "next/image";
 import Link from "next/link";
 
-import addSpot from "../../public/addspot.svg";
-
 interface CustomHeaderProps {
   user: any;
   userId?: string;
@@ -69,7 +67,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
   }, [isMobile, isManuallyExpanded]);
 
   return (
-    <header className="bg-[#bbd01a] text-[#212121] hover:text-black fixed left-0 top-0 h-[100svh] z-[99999]  transition duration-300 ease-in-out">
+    <header className="bg-[#bbd01a] rounded-r-lg text-[#212121] hover:text-black fixed left-0 top-0 h-[100svh] z-[99999]  transition duration-300 ease-in-out">
       <div
         ref={menuRef}
         className={`flex flex-col gap-4 px-2 overflow-y-auto overflow-x-hidden ${
@@ -156,7 +154,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
             )}
           </Link>
           <Link
-            href="/"
+            href="/map"
             className={`text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 w-full flex items-center gap-2 ${
               isExpanded ? "" : "justify-center"
             } transition duration-300 ease-in-out`}

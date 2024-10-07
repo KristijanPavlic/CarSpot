@@ -34,7 +34,7 @@ export default function PostPageClient({
 
   return (
     <main>
-      <Header user={user} isAdmin={isAdmin} />
+      <Header user={user} userId={user?.id} isAdmin={isAdmin} />
       <div className="px-5 py-10">
         <div className="flex flex-row gap-6 xl:w-[80%] w-full m-auto">
           <div className="w-[60%]">

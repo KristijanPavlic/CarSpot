@@ -9,6 +9,8 @@ import Modal from "react-modal";
 import Image from "next/image";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 import { z } from "zod";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface CreateCarProps {
   userId: string;
@@ -49,6 +51,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   ); // Combined images and preview URLs
   const [fullScreenIndex, setFullScreenIndex] = useState<number | null>(null); // For full-screen modal
   const [errors, setErrors] = useState<z.ZodIssue[]>([]); // Validation errors
+  const [isFormValid, setIsFormValid] = useState(false); // New state to handle form validation
 
   const createCar = useMutation(api.cars.createCar);
 
@@ -100,38 +103,43 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
       return;
     }
 
+    toast.info("Creating spot...", { autoClose: 2000 });
+
     // If validation passes, proceed with submission
-    const imagePublicIds: string[] = [];
-    if (imagesData.length > 0) {
-      for (const imgData of imagesData) {
-        const publicId = await handleImageUpload(imgData.file);
-        imagePublicIds.push(publicId);
+    try {
+      const imagePublicIds: string[] = [];
+      if (imagesData.length > 0) {
+        for (const imgData of imagesData) {
+          const publicId = await handleImageUpload(imgData.file);
+          imagePublicIds.push(publicId);
+        }
       }
+
+      await createCar({
+        brand,
+        model,
+        year,
+        city,
+        country,
+        userId,
+        username,
+        imagePublicIds,
+        postId,
+      });
+
+      toast.success("Spot created successfully!", { autoClose: 2000 });
+
+      setBrand("");
+      setModel("");
+      setYear("");
+      setCity("");
+      setCountry("");
+      imagesData.forEach((img) => URL.revokeObjectURL(img.url));
+      setImagesData([]);
+      setErrors([]);
+    } catch (error) {
+      toast.error("Failed to create car spot.", { autoClose: 5000 });
     }
-
-    await createCar({
-      brand,
-      model,
-      year,
-      city,
-      country,
-      userId,
-      username,
-      imagePublicIds,
-      postId,
-    });
-
-    // Reset form fields
-    setBrand("");
-    setModel("");
-    setYear("");
-    setCity("");
-    setCountry("");
-
-    // Revoke object URLs and reset imagesData
-    imagesData.forEach((img) => URL.revokeObjectURL(img.url));
-    setImagesData([]);
-    setErrors([]);
   };
 
   // Function to get error message for a field
@@ -192,13 +200,26 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
     }
   };
 
+  useEffect(() => {
+    const formData = {
+      brand,
+      model,
+      year,
+      city,
+      country,
+      images: imagesData.map((img) => img.file),
+    };
+
+    const result = carSchema.safeParse(formData);
+    setIsFormValid(result.success); // Update form validity
+  }, [brand, model, year, city, country, imagesData]);
+
   return (
-    <div className="min-h-screen bg-[#525252] flex items-center justify-center py-10 pl-[4.5rem] pr-4">
-      <div className="max-w-lg w-full space-y-8 bg-[#212121] p-8 rounded-lg shadow-xl">
-        <h1 className="text-3xl font-bold text-white">Create a Spot</h1>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {/* Brand Input */}
-          <div className="rounded-md shadow-sm flex flex-col">
+    <div className="container w-fit bg-[#525252] py-10">
+      <ToastContainer position="top-center" pauseOnHover theme="dark" newestOnTop  />
+      <div className="bg-[#212121] p-8 rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit}>
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:gap-6 gap-4">
             <div>
               <label htmlFor="brand" className="text-white">
                 Brand
@@ -218,7 +239,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
               )}
             </div>
             {/* Model Input */}
-            <div className="mt-4">
+            <div>
               <label htmlFor="model" className="text-white">
                 Model
               </label>
@@ -237,7 +258,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
               )}
             </div>
             {/* Year Input */}
-            <div className="mt-4">
+            <div>
               <label htmlFor="year" className="text-white">
                 Year
               </label>
@@ -256,7 +277,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
               )}
             </div>
             {/* City Input */}
-            <div className="mt-4">
+            <div>
               <label htmlFor="city" className="text-white">
                 City
               </label>
@@ -275,7 +296,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
               )}
             </div>
             {/* Country Input */}
-            <div className="mt-4">
+            <div>
               <label htmlFor="country" className="text-white">
                 Country
               </label>
@@ -295,52 +316,49 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 </p>
               )}
             </div>
-          </div>
-
-          {/* Image Upload */}
-          <div className="mt-6">
-            <label htmlFor="images" className="text-white">
-              Upload Images
-            </label>
-            <input
-              id="images"
-              name="images"
-              type="file"
-              accept="image/*"
-              multiple
-              onChange={handleImageChange}
-              className="block w-full text-base mt-1 text-[#6e6e6e] border border-gray-600 rounded-md cursor-pointer bg-[#C6C6C6] focus:outline-none"
-            />
-            {getError("images") && (
-              <p className="text-red-500 text-sm mt-1">{getError("images")}</p>
-            )}
+            {/* Image Upload */}
+            <div>
+              <label htmlFor="images" className="text-white">
+                Upload Images
+              </label>
+              <input
+                id="images"
+                type="file"
+                multiple
+                accept="image/*"
+                onChange={handleImageChange}
+                className="block w-full px-2 py-2 mt-1 cursor-pointer border border-gray-600 rounded-md bg-[#C6C6C6] text-[#6e6e6e]"
+              />
+              {getError("images") && (
+                <p className="text-red-500 text-sm mt-1">
+                  {getError("images")}
+                </p>
+              )}
+            </div>
           </div>
 
           {/* Image Preview */}
-          <div className="grid grid-cols-2 gap-4 mt-6">
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-6">
             {imagesData.map((img, index) => (
-              <div key={index} className="relative group h-32 w-full">
+              <div key={index} className="relative group h-40 w-full">
                 <Image
                   src={img.url}
                   alt={`Preview ${index}`}
                   layout="fill"
                   objectFit="cover"
-                  className="rounded-md"
+                  className="rounded-md shadow-sm"
                 />
-                {/* Delete and Full-Screen Options */}
-                <div className="absolute inset-0 flex justify-center items-center gap-2 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-300">
+                <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button
-                    type="button"
-                    title="Delete Image"
-                    className="text-white p-2 bg-red-500 rounded-full"
+                    className="bg-red-500 p-2 rounded-full text-white"
+                    title="Delete"
                     onClick={() => removeImage(index)}
                   >
                     <AiOutlineDelete size={20} />
                   </button>
                   <button
-                    type="button"
-                    title="View Full Screen"
-                    className="text-white p-2 bg-blue-500 rounded-full"
+                    className="bg-blue-500 p-2 rounded-full text-white"
+                    title="View"
                     onClick={() => setFullScreenIndex(index)}
                   >
                     <AiOutlineEye size={20} />
@@ -350,41 +368,25 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
             ))}
           </div>
 
-          {/* Full-Screen Modal */}
+          {/* Full Screen Modal */}
           {fullScreenIndex !== null && (
             <Modal
               isOpen={fullScreenIndex !== null}
               onRequestClose={() => setFullScreenIndex(null)}
-              className="flex justify-center items-center inset-0 fixed bg-black bg-opacity-75"
-              shouldCloseOnOverlayClick={true} // Close on click outside the image
+              className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
             >
-              <div className="relative w-full max-w-3xl h-screen flex items-center justify-center">
+              <div className="relative max-w-3xl mx-auto">
                 <button
-                  className="absolute top-5 right-5 text-5xl text-white"
-                  title="Close Full Screen"
-                  onClick={() => setFullScreenIndex(null)}
-                >
-                  &times;
-                </button>
-
-                {/* DELETE BUTTON */}
-                <button
-                  className="absolute top-5 left-5 text-xl text-white bg-red-500 p-2 rounded-full hover:bg-red-600"
-                  title="Delete Image"
-                  onClick={() => {
-                    removeImage(fullScreenIndex); // Deletes the image
-                    setFullScreenIndex(null); // Closes the modal after deletion
-                  }}
+                  className="absolute top-5 left-5 p-3 bg-red-500 rounded-full text-white"
+                  onClick={() => removeImage(fullScreenIndex)}
                 >
                   Delete
                 </button>
-
                 <button
-                  className="absolute left-5 text-4xl text-white p-2 bg-gray-800 rounded-full hover:bg-gray-600"
-                  title="Previous Image"
-                  onClick={previousImage}
+                  className="absolute top-5 right-5 text-5xl text-white"
+                  onClick={() => setFullScreenIndex(null)}
                 >
-                  <IoIosArrowBack />
+                  &times;
                 </button>
                 <Image
                   src={imagesData[fullScreenIndex].url}
@@ -394,25 +396,34 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                   className="max-h-full max-w-full object-contain"
                 />
                 <button
-                  className="absolute right-5 text-4xl text-white p-2 bg-gray-800 rounded-full hover:bg-gray-600"
-                  title="Next Image"
+                  className="absolute left-5 p-3 text-white bg-gray-800 rounded-full"
+                  title="Previous"
+                  onClick={previousImage}
+                >
+                  <IoIosArrowBack size={30} />
+                </button>
+                <button
+                  className="absolute right-5 p-3 text-white bg-gray-800 rounded-full"
+                  title="Next"
                   onClick={nextImage}
                 >
-                  <IoIosArrowForward />
+                  <IoIosArrowForward size={30} />
                 </button>
               </div>
             </Modal>
           )}
 
-          {/* Submit Button */}
-          <div className="mt-6">
-            <button
-              type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-md text-black bg-[#BBD01A] hover:bg-[#BBD01A] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#BBD01A]"
-            >
-              Create Spot
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={!isFormValid} // Button disabled if form is invalid
+            className={`w-fit py-3 px-4 mt-10 rounded-md text-sm font-semibold shadow-lg transition-all ${
+              isFormValid
+                ? "bg-[#BBD01A] text-black hover:bg-[#AACC00]"
+                : "bg-gray-500 text-gray-300 cursor-not-allowed"
+            }`}
+          >
+            Create Spot
+          </button>
         </form>
       </div>
     </div>

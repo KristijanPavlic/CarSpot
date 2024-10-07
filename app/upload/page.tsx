@@ -4,12 +4,15 @@ import Header from "../components/CustomHeader";
 import CreateCar from "../components/CreateCar";
 
 const UploadPost = async () => {
-  const { user, isAdmin, adminId } = await getUserSession();
+  const { user, isAdmin } = await getUserSession();
 
   return (
     <main>
-      <Header user={user} isAdmin={isAdmin} />
-      <CreateCar userId={user?.id ?? ""} username={user?.given_name ?? ""} />
+      <Header user={user} userId={user?.id} isAdmin={isAdmin} />
+      <div className="container m-auto pl-[4.5rem] pr-4 py-10">
+        <h2 className="text-3xl font-bold text-white">Create a Spot</h2>
+        <CreateCar userId={user?.id ?? ""} username={user?.given_name ?? ""} />
+      </div>
     </main>
   );
 };
