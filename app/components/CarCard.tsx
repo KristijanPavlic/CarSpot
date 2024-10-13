@@ -9,6 +9,7 @@ import { Car } from "../types/types";
 import { NextArrow, PrevArrow } from "./CustomArrow";
 import Link from "next/link";
 import { ClipLoader } from "react-spinners";
+import { usePathname } from "next/navigation";
 
 interface CarCardProps {
   car: Car;
@@ -28,6 +29,8 @@ interface CarCardProps {
 
 const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   const [loading, setLoading] = useState(true); // State for loading spinner
+
+  const path = usePathname();
 
   // Slider settings
   const settings = {
@@ -146,7 +149,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
                 href={`/${car.userId}`}
                 className="hover:underline transition duration-300 ease-in-out"
               >
-                {car.username}
+                {path === `/${userId}` ? "You" : car.username}
               </Link>
             </div>
           </div>
@@ -193,7 +196,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
           </button>
         </div>
       )}
-      {/* Implement pagination */}
     </div>
   );
 };

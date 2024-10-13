@@ -1,4 +1,4 @@
-import Header from "./components/CustomHeader";
+import CustomHeader from "./components/CustomHeader";
 import CarSearch from "./components/CarDisplay";
 import { getUserSession } from "./utils/getUserSession";
 
@@ -11,7 +11,7 @@ export default async function Home() {
 
   return (
     <>
-      <Header user={user} userId={user?.id} isAdmin={isAdmin} />
+      <CustomHeader user={user} userId={user?.id} isAdmin={isAdmin} />
       <main>
         <CarSearch isAdmin={isAdmin} userId={user?.id} />
       </main>
