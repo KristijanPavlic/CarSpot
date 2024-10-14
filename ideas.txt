@@ -1,3 +1,4 @@
+- cloudinaryConfig.ts prebaciti u env vars
 -popraviti da serach radi na stranicama di je vise autiju
 -napraviti hero section
 -dodati "Favourites" funkcionalnost sa zvjedicom na post-u
