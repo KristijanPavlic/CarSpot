@@ -90,7 +90,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
         {/* Logo */}
         <Link
           href="/"
-          className="text-2xl font-bold p-2 mb-4 flex items-center"
+          className="text-2xl font-bold p-2 mb-2 flex items-center"
         >
           {shouldShowText ? <span>CarSpot</span> : <span>CS</span>}
         </Link>
@@ -129,8 +129,8 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
             <span>
               <svg
                 fill="currentColor"
-                height="22"
-                width="22"
+                height="24"
+                width="24"
                 version="1.1"
                 id="Icons"
                 xmlns="http://www.w3.org/2000/svg"

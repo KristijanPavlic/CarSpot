@@ -46,10 +46,12 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   const [year, setYear] = useState("");
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
-  const [imagesData, setImagesData] = useState<{ file: File; url: string }[]>(
-    []
-  ); // Combined images and preview URLs
-  const [fullScreenIndex, setFullScreenIndex] = useState<number | null>(null); // For full-screen modal
+  const [imagesData, setImagesData] = useState<
+    { id: number; file: File; url: string }[]
+  >([]); // Combined images and preview URLs
+  const [fullScreenImageId, setFullScreenImageId] = useState<number | null>(
+    null
+  ); // For full-screen modal
   const [errors, setErrors] = useState<z.ZodIssue[]>([]); // Validation errors
   const [isFormValid, setIsFormValid] = useState(false); // New state to handle form validation
 
@@ -74,7 +76,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
     formData.append("public_id", sanitizedFileName);
 
     const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/dn0ngtrru/image/upload`,
+      "https://api.cloudinary.com/v1_1/dn0ngtrru/image/upload",
       formData
     );
 
@@ -154,6 +156,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
       const selectedFiles = Array.from(e.target.files);
 
       const newImagesData = selectedFiles.map((file) => ({
+        id: Date.now() + Math.random(),
         file,
         url: URL.createObjectURL(file),
       }));
@@ -163,41 +166,54 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
   };
 
   // Remove image from the preview and from the state
-  const removeImage = (index: number) => {
+  const removeImage = (id: number) => {
     setImagesData((prev) => {
-      const newImagesData = [...prev];
-      const removedImage = newImagesData.splice(index, 1)[0];
+      const newImagesData = prev.filter((img) => img.id !== id);
 
       // Revoke the object URL to free memory
-      URL.revokeObjectURL(removedImage.url);
+      const removedImage = prev.find((img) => img.id === id);
+      if (removedImage) {
+        URL.revokeObjectURL(removedImage.url);
+      }
 
       return newImagesData;
     });
-  };
 
-  // Cleanup the URL.createObjectURL objects to avoid memory leaks
-  useEffect(() => {
-    return () => {
-      imagesData.forEach((img) => URL.revokeObjectURL(img.url));
-    };
-  }, [imagesData]);
+    // If the removed image was being viewed in the modal, update fullScreenImageId
+    if (fullScreenImageId === id) {
+      if (imagesData.length > 1) {
+        // Show the next image
+        const currentIndex = imagesData.findIndex((img) => img.id === id);
+        const nextIndex = (currentIndex + 1) % imagesData.length;
+        setFullScreenImageId(imagesData[nextIndex].id);
+      } else {
+        // No images left
+        setFullScreenImageId(null);
+      }
+    }
+  };
 
   // Navigate to the previous image in full screen
   const previousImage = () => {
-    if (fullScreenIndex !== null) {
-      setFullScreenIndex((prevIndex) =>
-        prevIndex! > 0 ? prevIndex! - 1 : imagesData.length - 1
-      );
-    }
+    if (imagesData.length === 0 || fullScreenImageId === null) return;
+
+    const currentIndex = imagesData.findIndex(
+      (img) => img.id === fullScreenImageId
+    );
+    const prevIndex =
+      currentIndex > 0 ? currentIndex - 1 : imagesData.length - 1;
+    setFullScreenImageId(imagesData[prevIndex].id);
   };
 
   // Navigate to the next image in full screen
   const nextImage = () => {
-    if (fullScreenIndex !== null) {
-      setFullScreenIndex((prevIndex) =>
-        prevIndex! < imagesData.length - 1 ? prevIndex! + 1 : 0
-      );
-    }
+    if (imagesData.length === 0 || fullScreenImageId === null) return;
+
+    const currentIndex = imagesData.findIndex(
+      (img) => img.id === fullScreenImageId
+    );
+    const nextIndex = (currentIndex + 1) % imagesData.length;
+    setFullScreenImageId(imagesData[nextIndex].id);
   };
 
   useEffect(() => {
@@ -214,12 +230,20 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
     setIsFormValid(result.success); // Update form validity
   }, [brand, model, year, city, country, imagesData]);
 
+  const currentImage = imagesData.find((img) => img.id === fullScreenImageId);
+
   return (
-    <div className="container w-fit bg-[#525252] py-10">
-      <ToastContainer position="top-center" pauseOnHover theme="dark" newestOnTop  />
-      <div className="bg-[#212121] p-8 rounded-lg shadow-lg">
+    <div className="container w-fit bg-[#525252] py-6">
+      <ToastContainer
+        position="top-center"
+        pauseOnHover
+        theme="dark"
+        newestOnTop
+      />
+      <div className="bg-[#212121] p-6 rounded-lg shadow-lg">
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 lg:gap-6 gap-4">
+            {/* Brand Input */}
             <div>
               <label htmlFor="brand" className="text-white">
                 Brand
@@ -232,7 +256,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("brand") && (
                 <p className="text-red-500 text-sm mt-1">{getError("brand")}</p>
@@ -251,7 +275,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("model") && (
                 <p className="text-red-500 text-sm mt-1">{getError("model")}</p>
@@ -270,7 +294,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("year") && (
                 <p className="text-red-500 text-sm mt-1">{getError("year")}</p>
@@ -289,7 +313,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("city") && (
                 <p className="text-red-500 text-sm mt-1">{getError("city")}</p>
@@ -308,7 +332,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 border border-gray-600 bg-[#C6C6C6] placeholder-[#6e6e6e] text-black focus:outline-none focus:ring-[#D0E600] focus:border-[#D0E600] sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("country") && (
                 <p className="text-red-500 text-sm mt-1">
@@ -327,7 +351,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 multiple
                 accept="image/*"
                 onChange={handleImageChange}
-                className="block w-full px-2 py-2 mt-1 cursor-pointer border border-gray-600 rounded-md bg-[#C6C6C6] text-[#6e6e6e]"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
               />
               {getError("images") && (
                 <p className="text-red-500 text-sm mt-1">
@@ -339,27 +363,29 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
 
           {/* Image Preview */}
           <div className="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-4 mt-6">
-            {imagesData.map((img, index) => (
-              <div key={index} className="relative group h-40 w-full">
+            {imagesData.map((img) => (
+              <div key={img.id} className="relative group h-40 w-full">
                 <Image
                   src={img.url}
-                  alt={`Preview ${index}`}
+                  alt={`Preview ${img.id}`}
                   layout="fill"
                   objectFit="cover"
                   className="rounded-md shadow-sm"
                 />
                 <div className="absolute inset-0 flex items-center justify-center gap-3 bg-black bg-opacity-60 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <button
+                    type="button"
                     className="bg-red-500 p-2 rounded-full text-white"
                     title="Delete"
-                    onClick={() => removeImage(index)}
+                    onClick={() => removeImage(img.id)}
                   >
                     <AiOutlineDelete size={20} />
                   </button>
                   <button
+                    type="button"
                     className="bg-blue-500 p-2 rounded-full text-white"
                     title="View"
-                    onClick={() => setFullScreenIndex(index)}
+                    onClick={() => setFullScreenImageId(img.id)}
                   >
                     <AiOutlineEye size={20} />
                   </button>
@@ -369,27 +395,27 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
           </div>
 
           {/* Full Screen Modal */}
-          {fullScreenIndex !== null && (
+          {fullScreenImageId !== null && currentImage && (
             <Modal
-              isOpen={fullScreenIndex !== null}
-              onRequestClose={() => setFullScreenIndex(null)}
+              isOpen={fullScreenImageId !== null}
+              onRequestClose={() => setFullScreenImageId(null)}
               className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-75"
             >
               <div className="relative max-w-3xl mx-auto">
                 <button
                   className="absolute top-5 left-5 p-3 bg-red-500 rounded-full text-white"
-                  onClick={() => removeImage(fullScreenIndex)}
+                  onClick={() => removeImage(fullScreenImageId)}
                 >
                   Delete
                 </button>
                 <button
                   className="absolute top-5 right-5 text-5xl text-white"
-                  onClick={() => setFullScreenIndex(null)}
+                  onClick={() => setFullScreenImageId(null)}
                 >
                   &times;
                 </button>
                 <Image
-                  src={imagesData[fullScreenIndex].url}
+                  src={currentImage.url}
                   width={1200}
                   height={800}
                   alt="Full Screen"
@@ -416,7 +442,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
           <button
             type="submit"
             disabled={!isFormValid} // Button disabled if form is invalid
-            className={`w-fit py-3 px-4 mt-10 rounded-md text-sm font-semibold shadow-lg transition-all ${
+            className={`w-fit py-3 px-4 mt-4 rounded-md text-sm font-semibold shadow-lg transition-all ${
               isFormValid
                 ? "bg-[#BBD01A] text-black hover:bg-[#AACC00]"
                 : "bg-gray-500 text-gray-300 cursor-not-allowed"

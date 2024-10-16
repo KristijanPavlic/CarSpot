@@ -39,7 +39,7 @@ const ContactSection: React.FC = () => {
   return (
     <section
       id="contact"
-      className="py-16 px-6 md:px-12 lg:px-24 mt-6 bg-[#212121] rounded-lg shadow-lg"
+      className="mt-6 p-6 bg-[#212121] rounded-lg shadow-lg max-w-[800px]"
     >
       <ToastContainer
         position="top-center"
@@ -52,96 +52,54 @@ const ContactSection: React.FC = () => {
           If you have any questions or suggestions or want to share your
           car-spotting experience, feel free to contact us.
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          {/* Contact Info */}
-          {/* <div className="flex flex-col space-y-6">
-            <div className="flex items-center space-x-4">
-              <div className="text-white">
-                <span className="material-symbols-outlined">location_on</span>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold text-white">Location</h4>
-                <p className="text-white">
-                  Car Spot, Main Street, Your City, Country
-                </p>
-              </div>
+        {/* Contact Form */}
+        <div className="rounded-lg">
+          <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+            <div>
+              <label className="block text-lg text-[#d6d6d6]">Name</label>
+              <input
+                type="text"
+                id="name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your name"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                required
+              />
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-white">
-                <span className="material-symbols-outlined">email</span>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold text-white">Email</h4>
-                <p className="text-white">contact@car-spot.com</p>
-              </div>
+            <div>
+              <label className="block text-lg text-[#d6d6d6]">Email</label>
+              <input
+                type="email"
+                id="email"
+                title="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                required
+              />
             </div>
-            <div className="flex items-center space-x-4">
-              <div className="text-white">
-                <span className="material-symbols-outlined">phone</span>
-              </div>
-              <div>
-                <h4 className="text-xl font-semibold text-white">Phone</h4>
-                <p className="text-white">+123 456 789</p>
-              </div>
+            <div>
+              <label className="block text-lg text-[#d6d6d6]">Message</label>
+              <textarea
+                id="message"
+                title="Message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Enter your message"
+                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                rows={4}
+                required
+              />
             </div>
-          </div> */}
-
-          {/* Contact Form */}
-          <div className="bg-white p-8 shadow-lg rounded-lg">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label className="block text-lg font-medium text-gray-700">
-                  Name
-                </label>
-                <input
-                  type="text"
-                  id="name"
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder="Enter your name"
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-lg font-medium text-gray-700">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  title="Email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-lg font-medium text-gray-700">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  title="Message"
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Enter your message"
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
-                  rows={4}
-                  required
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-[#BBD01A] text-[#212121] p-3 rounded-md font-semibold hover:bg-[#212121] hover:text-white transition duration-300"
-              >
-                Send Message
-              </button>
-            </form>
-          </div>
+            <button
+              type="submit"
+              className="w-full bg-[#BBD01A] text-[#212121] mt-8 p-3 rounded-md font-semibold hover:bg-[#525252] hover:text-white transition duration-300"
+            >
+              Send Message
+            </button>
+          </form>
         </div>
       </div>
     </section>

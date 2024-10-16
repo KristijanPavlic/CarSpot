@@ -1,8 +1,7 @@
-- cloudinaryConfig.ts prebaciti u env vars
 -popraviti da serach radi na stranicama di je vise autiju
--napraviti hero section
 -dodati "Favourites" funkcionalnost sa zvjedicom na post-u
 -logo uz brand ?
 -logo za električne i benzince ?
 -karta post-ova
 -SEO
+-doraditi fullscreen modal
