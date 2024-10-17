@@ -48,7 +48,7 @@ const ContactSection: React.FC = () => {
         newestOnTop
       />
       <div>
-        <p className="text-lg text-white mb-12">
+        <p className="text-lg text-white mb-6">
           If you have any questions or suggestions or want to share your
           car-spotting experience, feel free to contact us.
         </p>
@@ -63,7 +63,7 @@ const ContactSection: React.FC = () => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter your name"
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                className="mt-1 block w-full p-3 border rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
                 required
               />
             </div>
@@ -76,7 +76,7 @@ const ContactSection: React.FC = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email"
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                className="mt-1 block w-full p-3 border rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
                 required
               />
             </div>
@@ -88,7 +88,7 @@ const ContactSection: React.FC = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder="Enter your message"
-                className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
+                className="mt-1 block w-full p-3 border rounded-md focus:outline-none focus:ring focus:ring-[#bbd01a86]"
                 rows={4}
                 required
               />

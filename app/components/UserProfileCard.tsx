@@ -3,7 +3,6 @@ import { usePathname } from "next/navigation";
 import { api } from "@/convex/_generated/api";
 import { useMemo } from "react";
 import Link from "next/link";
-import Image from "next/image";
 
 const UserProfileCard = () => {
   const path = usePathname();
@@ -15,26 +14,19 @@ const UserProfileCard = () => {
   const cars = useMemo(() => userCars ?? [], [userCars]);
   const carUserId = cars.map((car) => car.userId).filter(Boolean)[0];
 
-  const getUser = useQuery(api.cars.getUserByUsername, { username: carUserId });
-
   return (
     <div>
       {cars.map((car, index) => (
         <div key={index}>
-          <div className="flex flex-row items-center justify-between">
-            <div>
-              <h2 className="text-lg font-light text-[#D9D9D9]">Spotter</h2>
+          <div className="flex flex-row items-center justify-between shadow-lg">
+            <div className="p-4">
+              <h2 className="text-base font-light text-[#D9D9D9]">Spotter</h2>
               <div>
-                {/* <Image
-                  src={user?.picture || "/default-profile.png"}
-                  width={24}
-                  height={24}
-                  alt="profile picture"
-                  className="rounded-full"
-                /> */}
-                <div>
-                  <h3>{car.username}</h3>
-                  <Link href={`/${carUserId}`}>View Profile</Link>
+                <div className="text-white mt-4">
+                  <h3 className="text-lg">{car.username}</h3>
+                  <Link href={`/${carUserId}`} className="text-[#BBD01A]">
+                    View Profile
+                  </Link>
                 </div>
               </div>
             </div>

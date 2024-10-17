@@ -8,16 +8,6 @@ export const get = query({
   },
 });
 
-export const getUserByUsername = query({
-  args: { username: v.string() },
-  handler: async (ctx, args) => {
-    return await ctx.db
-      .query("cars")
-      .filter((q) => q.eq(q.field("username"), args.username))
-      .collect();
-  },
-});
-
 export const getCarsByUserId = query({
   args: { userId: v.string() }, // Expect a userId string argument
   handler: async (ctx, args) => {

@@ -256,7 +256,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("brand") && (
                 <p className="text-red-500 text-sm mt-1">{getError("brand")}</p>
@@ -275,7 +275,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={model}
                 onChange={(e) => setModel(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("model") && (
                 <p className="text-red-500 text-sm mt-1">{getError("model")}</p>
@@ -294,7 +294,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={year}
                 onChange={(e) => setYear(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("year") && (
                 <p className="text-red-500 text-sm mt-1">{getError("year")}</p>
@@ -313,7 +313,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("city") && (
                 <p className="text-red-500 text-sm mt-1">{getError("city")}</p>
@@ -332,7 +332,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 value={country}
                 onChange={(e) => setCountry(e.target.value)}
                 required
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("country") && (
                 <p className="text-red-500 text-sm mt-1">
@@ -351,7 +351,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
                 multiple
                 accept="image/*"
                 onChange={handleImageChange}
-                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:bg-white sm:text-sm"
+                className="appearance-none mt-1 rounded-md relative block w-full px-3 py-3 bg-[#C6C6C6] text-black focus:outline-none placeholder:text-[#6e6e6e] focus:ring focus:ring-[#bbd01a86] sm:text-sm"
               />
               {getError("images") && (
                 <p className="text-red-500 text-sm mt-1">
