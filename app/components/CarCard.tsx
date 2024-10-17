@@ -155,15 +155,17 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
           </div>
         </div>
       </div>
-      <div className="flex flex-wrap gap-4 float-right pr-4 py-4">
-        <Link
-          href={`/car/${car._id}`}
-          passHref
-          className="block w-fit p-4 bg-[#D9D9D9] text-[#212121] rounded-xl py-2 hover:bg-[#ffffff] transition duration-300 ease-in-out"
-        >
-          <span className="font-bold">View spot</span>
-        </Link>
-      </div>
+      {!path.includes("car") && (
+        <div className="flex flex-wrap gap-4 float-right pr-4 py-4">
+          <Link
+            href={`/car/${car._id}`}
+            passHref
+            className="block w-fit p-4 bg-[#D9D9D9] text-[#212121] rounded-xl py-2 hover:bg-[#ffffff] transition duration-300 ease-in-out"
+          >
+            <span className="font-bold">View spot</span>
+          </Link>
+        </div>
+      )}
       {(isAdmin || userId === car.userId) && (
         <div className="flex flex-wrap gap-4 px-4 py-4">
           {/* VIDJETI}
