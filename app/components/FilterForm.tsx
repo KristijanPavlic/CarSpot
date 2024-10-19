@@ -153,7 +153,7 @@ const FilterForm = ({
           onClick={clearAllSelections}
           className={`block p-2 bg-yellow-500 text-[#212121] rounded-lg hover:bg-yellow-600 hover:cursor-pointer transition duration-300 ease-in-out`}
         >
-          Clear all
+          Clear filters
         </button>
       )}
     </form>

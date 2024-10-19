@@ -107,7 +107,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
             {shouldShowText && <span className="whitespace-nowrap">Home</span>}
           </Link>
 
-          {!path.includes("car") && (
+          {path.length < 2 && (
             <button
               onClick={toggleSearchVisibility}
               className={`flex items-center gap-2 text-base font-semibold rounded-lg p-2 w-full hover:bg-[#212121] hover:text-white transition duration-300 ease-in-out ${
