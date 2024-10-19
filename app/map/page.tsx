@@ -4,7 +4,7 @@ import Header from "../components/CustomHeader";
 import AllSpotsMap from "../components/AllSpotsMap";
 
 export default async function Map() {
-  const { user, isAdmin, adminId } = await getUserSession();
+  const { user, isAdmin } = await getUserSession();
   return (
     <main>
       <Header user={user} userId={user?.id} isAdmin={isAdmin} />
