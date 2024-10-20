@@ -95,7 +95,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
         />
       </div>
       <div className="p-4 relative">
-        <button className="absolute right-4">
+        {/* <button className="absolute right-4">
           <span
             className="transition-all duration-300 ease-in-out hover:cursor-pointer"
             onMouseEnter={() => setIsFilled(true)}
@@ -130,7 +130,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
               </svg>
             )}
           </span>
-        </button>
+        </button> */}
         <h2 className="text-2xl text-white font-bold">
           {car.brand} {car.model}
         </h2>

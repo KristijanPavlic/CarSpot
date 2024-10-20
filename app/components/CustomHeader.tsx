@@ -136,11 +136,11 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 32 32"
               >
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
                 <g
                   id="SVGRepo_tracerCarrier"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
                 ></g>
                 <g id="SVGRepo_iconCarrier">
                   {" "}
@@ -207,7 +207,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
                     <span className="whitespace-nowrap">Profile</span>
                   )}
                 </Link>
-                <Link
+                {/* <Link
                   href="/favourites"
                   className="flex items-center gap-2 p-2 rounded-lg hover:bg-[#212121] hover:text-white w-full transition duration-300 ease-in-out"
                 >
@@ -215,7 +215,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
                   {shouldShowText && (
                     <span className="whitespace-nowrap">Favourites</span>
                   )}
-                </Link>
+                </Link> */}
                 {isAdmin && (
                   <Link
                     href="/"
