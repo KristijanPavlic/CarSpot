@@ -96,7 +96,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
         </Link>
 
         {/* Navigation Items */}
-        <div className="flex flex-col items-start gap-4 w-full">
+        <div className="flex flex-col items-start lg:gap-4 gap-3 w-full">
           <Link
             href="/"
             className={`text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 w-full flex items-center gap-2 ${
@@ -112,7 +112,7 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
               onClick={toggleSearchVisibility}
               className={`flex items-center gap-2 text-base font-semibold rounded-lg p-2 w-full hover:bg-[#212121] hover:text-white transition duration-300 ease-in-out ${
                 isExpanded ? "" : "justify-center"
-              }`}
+              } ${isSearchVisible ? "bg-[#212121] text-white" : ""}`}
             >
               <span className="material-symbols-outlined">search</span>
               {shouldShowText && (
@@ -163,6 +163,17 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
             {shouldShowText && <span className="whitespace-nowrap">Map</span>}
           </Link>
           <Link
+            href="/events"
+            className={`text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 w-full flex items-center gap-2 ${
+              isExpanded ? "" : "justify-center"
+            } transition duration-300 ease-in-out`}
+          >
+            <span className="material-symbols-outlined">calendar_month</span>
+            {shouldShowText && (
+              <span className="whitespace-nowrap">Events</span>
+            )}
+          </Link>
+          <Link
             href="/contact"
             className={`text-base font-semibold hover:bg-[#212121] rounded-lg hover:text-white p-2 w-full flex items-center gap-2 ${
               isExpanded ? "" : "justify-center"
@@ -176,10 +187,10 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
         </div>
 
         {/* User Profile Section */}
-        <div className="flex flex-col items-start gap-4 z-[999] mt-auto w-full">
+        <div className="flex flex-col items-start lg:gap-4 gap-3 z-[999] mt-auto w-full">
           {user ? (
             <div className="relative w-full">
-              <div className="flex flex-col gap-4 mb-4">
+              <div className="flex flex-col lg:gap-3 gap-2 mb-4">
                 <Link
                   href={`/${userId}`}
                   // href="/profile"

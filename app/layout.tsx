@@ -3,6 +3,7 @@ import { Montserrat_Alternates } from "next/font/google";
 import "./globals.css";
 import { ConvexClientProvider } from "./ConvexClientProvider";
 import { SearchProvider } from "./context/SearchContext";
+import { MapDataProvider } from "./context/MapDataContext";
 
 const montserratAlternates = Montserrat_Alternates({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({
       </head>
       <body className={montserratAlternates.className}>
         <ConvexClientProvider>
-          <SearchProvider>{children}</SearchProvider>
+          <MapDataProvider>
+            <SearchProvider>{children}</SearchProvider>
+          </MapDataProvider>
         </ConvexClientProvider>
       </body>
     </html>

@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
-import { ReactMutation } from "convex/react";
+import { ReactMutation, useMutation, useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import Image from "next/image";
 import Slider from "react-slick";
 import ElementTile from "./ElementTile";
@@ -14,7 +17,7 @@ import { usePathname } from "next/navigation";
 interface CarCardProps {
   car: Car;
   isAdmin: boolean;
-  userId?: string;
+  userId: string;
   deleteCar: ReactMutation<
     FunctionReference<
       "mutation",
@@ -31,6 +34,31 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   const [loading, setLoading] = useState(true); // State for loading spinner
 
   const path = usePathname();
+
+  const [isFavorite, setIsFavorite] = useState(false);
+
+  // Fetch user's favorites using the function reference from `api`
+  const userFavorites =
+    useQuery(api.favorites.getFavoritesByUserId, { userId }) || [];
+
+  useEffect(() => {
+    // Check if the current car is in the user's favorites
+    const favoriteCarIds = userFavorites.map((fav) => fav.carId);
+    setIsFavorite(favoriteCarIds.includes(car._id));
+  }, [userFavorites, car._id]);
+
+  // Mutation functions
+  const addFavoriteMutation = useMutation(api.favorites.addFavorite);
+  const removeFavoriteMutation = useMutation(api.favorites.removeFavorite);
+
+  const handleFavoriteClick = async () => {
+    if (isFavorite) {
+      await removeFavoriteMutation({ userId, carId: car._id });
+    } else {
+      await addFavoriteMutation({ userId, carId: car._id });
+    }
+    setIsFavorite(!isFavorite);
+  };
 
   // Slider settings
   const settings = {
@@ -100,6 +128,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
             onMouseEnter={() => setIsFilled(true)}
             onMouseLeave={() => setIsFilled(false)}
             title={isFilled ? "Add to favourites" : "Remove from favourites"}
+            onClick={handleFavoriteClick}
           >
             {isFilled ? (
               <svg
@@ -168,16 +197,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
       )}
       {(isAdmin || userId === car.userId) && (
         <div className="flex flex-wrap gap-4 px-4 py-4">
-          {/* VIDJETI}
-          <button
-            className="block w-fit p-4 bg-[#D9D9D9] text-[#212121] rounded-xl py-2 hover:bg-[#ffffff] transition duration-300 ease-in-out"
-            // onClick={() => editCar({ id: car._id })}
-          >
-            <div className="flex justify-center gap-2">
-              Edit
-              <span className="material-symbols-outlined">edit</span>
-            </div>
-          </button> */}
           <button
             className="block w-fit p-4 bg-[#B71C1C] text-white rounded-xl py-2 hover:bg-red-400 transition duration-300 ease-in-out"
             onClick={() => {

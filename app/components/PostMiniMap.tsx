@@ -1,5 +1,3 @@
-// components/PostMiniMap.tsx
-
 "use client";
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -7,8 +5,6 @@ import { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-/* // Fixing Leaflet's default icon issue
-delete L.Icon.Default.prototype._getIconUrl; */
 
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -58,8 +54,9 @@ const PostMiniMap = ({ city, country }: PostMiniMapProps) => {
       ) : position ? (
         <MapContainer
           center={position}
-          zoom={11}
+          zoom={7}
           style={{ height: "360px", width: "100%" }}
+          className="rounded-lg"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'

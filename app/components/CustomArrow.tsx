@@ -1,5 +1,4 @@
 import React from "react";
-import ElementTile from "./ElementTile";
 
 interface ArrowProps {
   onClick?: React.MouseEventHandler<HTMLDivElement>;

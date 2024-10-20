@@ -13,4 +13,10 @@ export default defineSchema({
     imagePublicIds: v.array(v.string()),
     postId: v.string(),
   }),
+  favorites: defineTable({
+    userId: v.string(),
+    carId: v.string(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_user_and_car", ["userId", "carId"]),
 });

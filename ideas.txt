@@ -1,5 +1,3 @@
--api key za geo maknuti s component allspotsmap
--popraviti da serach radi na stranicama di je vise autiju
 -dodati "Favourites" funkcionalnost sa zvjedicom na post-u
 -logo uz brand ?
 -logo za električne i benzince ?

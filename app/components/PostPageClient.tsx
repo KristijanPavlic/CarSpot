@@ -1,5 +1,3 @@
-// components/PostPageClient.tsx
-
 "use client";
 
 import Header from "../components/CustomHeader";
