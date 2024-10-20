@@ -15,7 +15,6 @@ import type {
 } from "convex/server";
 import type * as api_searchCar from "../api/searchCar.js";
 import type * as cars from "../cars.js";
-import type * as favorites from "../favorites.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -28,7 +27,6 @@ import type * as favorites from "../favorites.js";
 declare const fullApi: ApiFromModules<{
   "api/searchCar": typeof api_searchCar;
   cars: typeof cars;
-  favorites: typeof favorites;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

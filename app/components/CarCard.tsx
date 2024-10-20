@@ -1,10 +1,9 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Id } from "@/convex/_generated/dataModel";
 import { FunctionReference } from "convex/server";
-import { ReactMutation, useMutation, useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
+import { ReactMutation } from "convex/react";
 import Image from "next/image";
 import Slider from "react-slick";
 import ElementTile from "./ElementTile";
@@ -34,32 +33,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
   const [loading, setLoading] = useState(true); // State for loading spinner
 
   const path = usePathname();
-
-  const [isFavorite, setIsFavorite] = useState(false);
-
-  // Fetch user's favorites using the function reference from `api`
-  const userFavorites =
-    useQuery(api.favorites.getFavoritesByUserId, { userId }) || [];
-
-  useEffect(() => {
-    // Check if the current car is in the user's favorites
-    const favoriteCarIds = userFavorites.map((fav) => fav.carId);
-    setIsFavorite(favoriteCarIds.includes(car._id));
-  }, [userFavorites, car._id]);
-
-  // Mutation functions
-  const addFavoriteMutation = useMutation(api.favorites.addFavorite);
-  const removeFavoriteMutation = useMutation(api.favorites.removeFavorite);
-
-  const handleFavoriteClick = async () => {
-    if (isFavorite) {
-      await removeFavoriteMutation({ userId, carId: car._id });
-    } else {
-      await addFavoriteMutation({ userId, carId: car._id });
-    }
-    setIsFavorite(!isFavorite);
-  };
-
   // Slider settings
   const settings = {
     key: car._id,
@@ -128,7 +101,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
             onMouseEnter={() => setIsFilled(true)}
             onMouseLeave={() => setIsFilled(false)}
             title={isFilled ? "Add to favourites" : "Remove from favourites"}
-            onClick={handleFavoriteClick}
           >
             {isFilled ? (
               <svg
