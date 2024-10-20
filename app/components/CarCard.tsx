@@ -16,7 +16,7 @@ import { usePathname } from "next/navigation";
 interface CarCardProps {
   car: Car;
   isAdmin: boolean;
-  userId: string;
+  userId?: string;
   deleteCar: ReactMutation<
     FunctionReference<
       "mutation",
