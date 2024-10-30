@@ -12,5 +12,7 @@ export default defineSchema({
     username: v.string(),
     imagePublicIds: v.array(v.string()),
     postId: v.string(),
+    approved: v.boolean(),
+    createdAt: v.number(),
   }),
 });

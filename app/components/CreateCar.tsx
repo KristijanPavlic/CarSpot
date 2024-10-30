@@ -129,7 +129,9 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
         postId,
       });
 
-      toast.success("Spot created successfully!", { autoClose: 2000 });
+      toast.success("Spot submitted successfully! Pending admin approval.", {
+        autoClose: 5000,
+      });
 
       setBrand("");
       setModel("");
@@ -140,7 +142,7 @@ const CreateCar = ({ userId, username }: CreateCarProps) => {
       setImagesData([]);
       setErrors([]);
     } catch (error) {
-      toast.error("Failed to create car spot.", { autoClose: 5000 });
+      toast.error("Failed to create spot.", { autoClose: 5000 });
     }
   };
 

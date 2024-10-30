@@ -1,5 +1,3 @@
--dodati "Favourites" funkcionalnost sa zvjedicom na post-u
--logo uz brand ?
--logo za električne i benzince ?
+-decline spot ne radi
 -SEO
 -doraditi fullscreen modal

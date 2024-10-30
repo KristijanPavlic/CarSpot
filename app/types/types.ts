@@ -12,3 +12,5 @@ export interface Car {
   username: string;
   postId: string;
 }
+
+export type { Id };

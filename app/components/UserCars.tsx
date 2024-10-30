@@ -27,9 +27,9 @@ export default function UserCars({ loggedInUserId, adminId }: UserCarsProps) {
       <h2 className="text-3xl md:text-4xl font-bold text-[#D9D9D9]">
         {
           // If the user is viewing their own profile, show "My Spots". Otherwise, show "Spots by [username]"
-          cars.map((car) => car.userId)[0] === loggedInUserId
-            ? "My Spots"
-            : `Spots by ${cars.map((car) => car.username)[0]}`
+          cars.map((car) => car.username)[0]
+            ? `Spots by ${cars.map((car) => car.username)[0]}`
+            : "My Spots"
         }
       </h2>
       {cars.length > 0 ? (

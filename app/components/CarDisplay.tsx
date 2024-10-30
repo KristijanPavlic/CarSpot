@@ -16,7 +16,7 @@ interface CarSearchProps {
 }
 
 const CarSearch = ({ isAdmin, userId }: CarSearchProps) => {
-  const queryResult = useQuery(api.cars.get);
+  const queryResult = useQuery(api.cars.getApprovedCars);
   const cars = useMemo(() => queryResult ?? [], [queryResult]);
   const deleteCar = useMutation(api.cars.deleteCar);
 

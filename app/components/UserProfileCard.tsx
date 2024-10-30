@@ -23,7 +23,7 @@ const UserProfileCard = () => {
               <h2 className="text-base font-light text-[#D9D9D9]">Spotter</h2>
               <div>
                 <div className="text-white mt-4">
-                  <h3 className="text-lg">{car.username}</h3>
+                  <h3 className="text-lg mb-2">{car.username}</h3>
                   <Link href={`/${carUserId}`} className="text-[#BBD01A]">
                     View Profile
                   </Link>

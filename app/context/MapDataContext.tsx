@@ -40,7 +40,7 @@ export const useMapData = () => {
 export const MapDataProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
-  const cars = useQuery(api.cars.get); // Fetch all cars
+  const cars = useQuery(api.cars.getApprovedCars); // Fetch all cars
   const [carsWithCoords, setCarsWithCoords] = useState<CarWithCoordinates[]>(
     []
   );

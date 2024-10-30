@@ -207,18 +207,9 @@ const CustomHeader = ({ user, userId, isAdmin }: CustomHeaderProps) => {
                     <span className="whitespace-nowrap">Profile</span>
                   )}
                 </Link>
-                {/* <Link
-                  href="/favourites"
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-[#212121] hover:text-white w-full transition duration-300 ease-in-out"
-                >
-                  <span className="material-symbols-outlined">star</span>
-                  {shouldShowText && (
-                    <span className="whitespace-nowrap">Favourites</span>
-                  )}
-                </Link> */}
                 {isAdmin && (
                   <Link
-                    href="/"
+                    href="/dashboard"
                     className="flex items-center gap-2 p-2 rounded-lg hover:bg-[#212121] hover:text-white w-full transition duration-300 ease-in-out"
                   >
                     <span className="material-symbols-outlined">grid_view</span>

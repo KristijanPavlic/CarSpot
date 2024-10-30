@@ -49,8 +49,6 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
 
   const uploadUrl = `https://res.cloudinary.com/dn0ngtrru/image/upload/v1726423541`;
 
-  const [isFilled, setIsFilled] = useState(false);
-
   return (
     <div className="h-fit bg-[#212121] shadow-lg rounded-xl hover:shadow-xl transition-shadow">
       <div className="relative">
@@ -60,7 +58,7 @@ const CarCard = ({ car, isAdmin, userId, deleteCar }: CarCardProps) => {
               <div
                 // key should be placed here for each slide
                 key={`${car._id}-${idx}`}
-                className="relative w-full h-48 md:h-64 lg:h-80 xl:h-96 focus:outline-none"
+                className="relative w-full aspect-video focus:outline-none"
               >
                 {loading && (
                   <div className="flex justify-center items-center h-full">
