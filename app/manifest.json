@@ -1,0 +1,32 @@
+{
+    "short_name": "CarSpot",
+    "name": "CarSpot - Discover Car Spots",
+    "description": "Explore, discover, and share unique car spotting locations worldwide. Dive into detailed car insights with real-time map features and exclusive car spot data.",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "64x64 32x32 24x24 16x16",
+            "type": "image/ico"
+        },
+        {
+            "src": "/apple-touch-icon.png",
+            "sizes": "180x180",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#525252",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#BBD01A"
+}
